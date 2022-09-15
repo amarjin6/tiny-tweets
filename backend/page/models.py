@@ -11,15 +11,15 @@ class Tag(models.Model):
 
 
 class Page(models.Model):
-    title = models.CharField(max_length=80)
     uuid = models.CharField(max_length=30, unique=True)
-    description = models.TextField()
+    title = models.CharField(max_length=80)
     tags = models.ManyToManyField(Tag, related_name='tags_page')
+    image = models.URLField(null=True, blank=True)
+    description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_page')
     followers = models.ManyToManyField(User, related_name='followers_page')
-    image = models.URLField(null=True, blank=True)
-    is_private = models.BooleanField(default=False)
     follow_requests = models.ManyToManyField(User, related_name='follow_requests_page')
+    is_private = models.BooleanField(default=False)
     unblock_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):

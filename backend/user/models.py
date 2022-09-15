@@ -11,7 +11,6 @@ class User(AbstractUser):
     email = models.EmailField(unique=True)
     image_s3_path = models.CharField(max_length=200, null=True, blank=True)
     role = models.CharField(max_length=9, choices=Role.choices(), default=Role.USER.value, blank=False)
-    title = models.CharField(max_length=80)
     is_blocked = models.BooleanField(default=False)
 
     def __str__(self):
