@@ -40,6 +40,7 @@ INSTALLED_APPS = [
 
     # local apps
     'user',
+    'page',
 
     # third-party apps
     'rest_framework',
