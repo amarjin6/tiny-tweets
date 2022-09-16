@@ -13,6 +13,9 @@ class User(AbstractUser):
     role = models.CharField(max_length=9, choices=Role.choices(), default=Role.USER.value, blank=False)
     is_blocked = models.BooleanField(default=False)
 
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['password']
+
     def __str__(self):
         name = self.username
         if self.role == Role.USER.value:
