@@ -11,8 +11,8 @@ from core.mixins.serializers import DynamicSerializerMixin
 class UserViewSet(mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet,
                   PermissionMixin, DynamicSerializerMixin):
     queryset = User.objects.all()
-    serializer_class = UserSerializer
-    permission_classes = (IsAuthenticated,)
+    serializer_class = CreateUserSerializer
+    permission_classes = (AllowAny,)
     permissions_mapping = {
         'create': AllowAny,
     }

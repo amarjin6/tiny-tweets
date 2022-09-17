@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 from core.enums import Role
+from user.managers import CustomUserManager
 
 
 class User(AbstractUser):
@@ -15,6 +16,8 @@ class User(AbstractUser):
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['password']
+
+    objects = CustomUserManager()
 
     def __str__(self):
         name = self.username
