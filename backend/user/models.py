@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 from core.enums import Role
+from user.managers import CustomUserManager
 
 
 class User(AbstractUser):
@@ -12,6 +13,11 @@ class User(AbstractUser):
     image_s3_path = models.CharField(max_length=200, null=True, blank=True)
     role = models.CharField(max_length=9, choices=Role.choices(), default=Role.USER.value, blank=False)
     is_blocked = models.BooleanField(default=False)
+
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['password']
+
+    objects = CustomUserManager()
 
     def __str__(self):
         name = self.username

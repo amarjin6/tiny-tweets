@@ -8,5 +8,6 @@ router.register(r'users', UserViewSet)
 router.register(r'tags', TagViewSet)
 router.register(r'pages', PageViewSet)
 router.register(r'posts', PostViewSet)
+router.register(r'register', UserViewSet)
 
 urlpatterns = router.urls
