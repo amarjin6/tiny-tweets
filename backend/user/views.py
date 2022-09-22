@@ -8,18 +8,16 @@ from core.mixins.serializers import DynamicActionSerializerMixin
 from core.permissions import IsAdminOrModerator
 
 
-class UserViewSet(DynamicActionSerializerMixin, mixins.CreateModelMixin, mixins.ListModelMixin,
-                  mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
-                  viewsets.GenericViewSet):
+class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
     permissions_mapping = {
         'create': AllowAny,
-        'retrieve': IsAuthenticated | IsAdminOrModerator,
-        'update': IsAuthenticated | IsAdminOrModerator,
-        'delete': IsAuthenticated | IsAdminUser,
-        'list': IsAuthenticated | IsAdminOrModerator,
+        'retrieve': IsAdminOrModerator,
+        'update': IsAdminOrModerator,
+        'destroy': IsAdminUser,
+        'list': IsAdminOrModerator,
     }
     serializer_action_classes = {
         'create': CreateUserSerializer,
