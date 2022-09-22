@@ -11,9 +11,9 @@ class TagSerializer(serializers.ModelSerializer):
 
 
 class FullPageSerializer(serializers.ModelSerializer):
-    tags = TagSerializer()
+    tags = TagSerializer(many=True)
     owner = UserSerializer()
-    followers = UserSerializer()
+    followers = UserSerializer(many=True)
 
     class Meta:
         model = Page
@@ -21,23 +21,14 @@ class FullPageSerializer(serializers.ModelSerializer):
 
 
 class PageSerializer(serializers.ModelSerializer):
-    tags = serializers.SerializerMethodField()
+    tags = TagSerializer(many=True)
     owner = UserSerializer()
-    followers = serializers.SerializerMethodField()
+    followers = UserSerializer(read_only=True, many=True)
 
     class Meta:
         model = Page
         fields = ('id', 'uuid', 'title', 'tags', 'owner', 'followers', 'is_private', 'is_blocked', 'unblock_date')
         read_only_fields = ('followers', 'is_blocked', 'unblock_date')
-
-    def get_followers(self, obj):
-        response = []
-        for _user in obj.all():
-            follower_profile = UserSerializer(
-                _user.userprofile,
-                context={'request': self.context['request']})
-            response.append(follower_profile.data)
-        return response
 
 
 class PostSerializer(serializers.ModelSerializer):

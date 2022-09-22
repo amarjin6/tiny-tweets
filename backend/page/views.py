@@ -3,7 +3,6 @@ from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated
 
 from core.mixins.serializers import DynamicRoleSerializerMixin
-from core.mixins.permissions import PermissionMixin
 from core.enums import Role
 from page.models import Tag, Page, Post
 from page.permissions import PageAccessPermission
@@ -16,17 +15,11 @@ class TagViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.Gene
     permission_classes = (IsAuthenticated,)
 
 
-class PageViewSet(PermissionMixin, DynamicRoleSerializerMixin, viewsets.ModelViewSet):
+class PageViewSet(DynamicRoleSerializerMixin, viewsets.ModelViewSet):
     queryset = Page.objects.all()
     serializer_class = PageSerializer
     permission_classes = (IsAuthenticated, PageAccessPermission)
-    permissions_mapping = {
-        'create': IsAuthenticated,
-        'retrieve': IsAdminOrModerator,
-        'update': IsAdminOrModerator,
-        'destroy': IsAdminUser,
-        'list': IsAdminOrModerator,
-    }
+
     serializer_role_classes = {
         Role.ADMIN.value: FullPageSerializer,
         Role.MODERATOR.value: FullPageSerializer,
