@@ -5,7 +5,7 @@ from core.enums import Role
 
 
 class CustomUserManager(UserManager):
-    def create_user(self, email: str, password: str, username: str, role: str = Role.USER, is_blocked: bool = False):
+    def create_user(self, email: str, password: str, role: str = Role.USER, is_blocked: bool = False):
         if not email:
             raise ValueError('Email is required')
         if not password:
@@ -15,7 +15,6 @@ class CustomUserManager(UserManager):
         )
         password = make_password(password)
         user.set_password(password)
-        user.username = username
         user.role = role
         user.is_blocked = is_blocked
         user.is_active = True
@@ -29,7 +28,7 @@ class CustomUserManager(UserManager):
         user.save()
         return user
 
-    def create_superuser(self, email: str, password: str, username: str, role: str = Role.ADMIN,
+    def create_superuser(self, email: str, password: str, role: str = Role.ADMIN,
                          is_blocked: bool = False):
         if not email:
             raise ValueError('Email is required')
@@ -39,7 +38,6 @@ class CustomUserManager(UserManager):
             email=self.normalize_email(email)
         )
         user.set_password(password)
-        user.username = username
         user.role = role
         user.is_blocked = is_blocked
         user.is_active = True

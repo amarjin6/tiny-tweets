@@ -1,19 +1,25 @@
 from rest_framework import viewsets
 from rest_framework import mixins
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 
 from user.models import User
 from user.serializers import UserSerializer, CreateUserSerializer
-from core.mixins.serializers import DynamicSerializerMixin
+from core.mixins.serializers import DynamicActionSerializerMixin
+from core.permissions import IsAdminOrModerator
 
 
-class UserViewSet(DynamicSerializerMixin, mixins.CreateModelMixin, mixins.RetrieveModelMixin, mixins.ListModelMixin,
+class UserViewSet(DynamicActionSerializerMixin, mixins.CreateModelMixin, mixins.ListModelMixin,
+                  mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin,
                   viewsets.GenericViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = (IsAuthenticated,)
     permissions_mapping = {
         'create': AllowAny,
+        'retrieve': IsAuthenticated | IsAdminOrModerator,
+        'update': IsAuthenticated | IsAdminOrModerator,
+        'delete': IsAuthenticated | IsAdminUser,
+        'list': IsAuthenticated | IsAdminOrModerator,
     }
     serializer_action_classes = {
         'create': CreateUserSerializer,

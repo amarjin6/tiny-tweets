@@ -8,7 +8,7 @@ from user.managers import CustomUserManager
 class User(AbstractUser):
     first_name = models.CharField(max_length=64)
     last_name = models.CharField(max_length=64)
-    username = models.CharField(max_length=32, unique=True)
+    username = models.CharField(max_length=32)
     email = models.EmailField(unique=True)
     image_s3_path = models.CharField(max_length=200, null=True, blank=True)
     role = models.CharField(max_length=9, choices=Role.choices(), default=Role.USER.value, blank=False)
@@ -20,14 +20,14 @@ class User(AbstractUser):
     objects = CustomUserManager()
 
     def __str__(self):
-        name = self.username
+        email = self.email
         if self.role == Role.USER.value:
-            name = f'user {name}'
+            email = f'user {email}'
 
         elif self.role == Role.MODERATOR.value:
-            name = f'moderator {name}'
+            email = f'moderator {email}'
 
         elif self.role == Role.ADMIN.value:
-            name = f'admin {name}'
+            email = f'admin {email}'
 
-        return name
+        return email

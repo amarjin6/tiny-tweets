@@ -10,14 +10,34 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
-class PageSerializer(serializers.ModelSerializer):
+class FullPageSerializer(serializers.ModelSerializer):
     tags = TagSerializer()
     owner = UserSerializer()
     followers = UserSerializer()
 
     class Meta:
         model = Page
-        fields = ('id', 'uuid', 'title', 'tags', 'owner', 'followers', 'is_private', 'unblock_date')
+        fields = ('id', 'uuid', 'title', 'tags', 'owner', 'followers', 'is_private', 'is_blocked', 'unblock_date')
+
+
+class PageSerializer(serializers.ModelSerializer):
+    tags = serializers.SerializerMethodField()
+    owner = UserSerializer()
+    followers = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Page
+        fields = ('id', 'uuid', 'title', 'tags', 'owner', 'followers', 'is_private', 'is_blocked', 'unblock_date')
+        read_only_fields = ('followers', 'is_blocked', 'unblock_date')
+
+    def get_followers(self, obj):
+        response = []
+        for _user in obj.all():
+            follower_profile = UserSerializer(
+                _user.userprofile,
+                context={'request': self.context['request']})
+            response.append(follower_profile.data)
+        return response
 
 
 class PostSerializer(serializers.ModelSerializer):
