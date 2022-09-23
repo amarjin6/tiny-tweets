@@ -15,7 +15,7 @@ class User(AbstractUser):
     is_blocked = models.BooleanField(default=False)
 
     USERNAME_FIELD = 'email'
-    REQUIRED_FIELDS = ['password']
+    REQUIRED_FIELDS = ['username', 'password']
 
     objects = CustomUserManager()
 

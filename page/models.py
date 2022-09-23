@@ -20,6 +20,7 @@ class Page(models.Model):
     followers = models.ManyToManyField(User, related_name='followers_page')
     follow_requests = models.ManyToManyField(User, related_name='follow_requests_page')
     is_private = models.BooleanField(default=False)
+    is_blocked = models.BooleanField(default=False)
     unblock_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):

@@ -13,3 +13,12 @@ class IsModerator(BasePermission):
     def has_permission(self, request, view):
         user = request.user
         return Role.MODERATOR.value in user.role
+
+
+class IsAdminOrModerator(BasePermission):
+    def has_permission(self, request, view):
+        user = request.user
+        try:
+            return Role.MODERATOR.value in user.role or Role.ADMIN.value in user.role
+        except Exception as e:
+            return False
