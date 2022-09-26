@@ -14,6 +14,7 @@ rabbitmq = "*"
 requests = "*"
 django-rest-swagger = "*"
 psycopg2-binary = "*"
+uuid = "*"
 
 [dev-packages]
 

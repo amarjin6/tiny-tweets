@@ -32,6 +32,5 @@ services:
     env_file:
       - env/.env
       - env/localstack.env
-
 volumes:
   pgdata:
