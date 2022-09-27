@@ -228,3 +228,6 @@ EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
 EMAIL_PORT = os.getenv('EMAIL_PORT', 587)
 EMAIL_USE_TLS = True if os.getenv('EMAIL_USE_TLS') == '1' else False
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+
+CELERY_BROKER_URL = f"{os.getenv('PROTOCOL')}://{os.getenv('RABBITMQ_DEFAULT_USER')}:" \
+                    f"{os.getenv('RABBITMQ_DEFAULT_PASS')}@{os.getenv('HOST')}:{os.getenv('PORT')} "

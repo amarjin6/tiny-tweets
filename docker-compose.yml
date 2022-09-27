@@ -14,7 +14,7 @@ services:
     container_name: django
     restart: always
     volumes:
-      - .:/usr/src/innotter
+      - .:/usr/src/
     ports:
       - "8000:8000"
     env_file:
@@ -32,5 +32,47 @@ services:
     env_file:
       - env/.env
       - env/localstack.env
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    restart: on-failure
+    env_file:
+      - env/.env
+      - env/rabbitmq.env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - rabbitmq
+  celery:
+    build: .
+    container_name: celery
+    restart: on-failure
+    command: celery -A innotter worker -l INFO
+    volumes:
+      - .:/usr/src/
+    env_file:
+      - env/rabbitmq.env
+      - env/db.env
+      - env/.env
+    depends_on:
+      - pgdb
+      - rabbitmq
+      - django
+  flower:
+    image: mher/flower
+    container_name: flower
+    command: celery flower
+    ports:
+      - "5555:5555"
+    volumes:
+      - flower_data:/data
+    env_file:
+      - env/rabbitmq.env
+    depends_on:
+      - celery
 volumes:
   pgdata:
+  flower_data:
+networks:
+  rabbitmq:
