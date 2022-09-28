@@ -38,6 +38,7 @@ class CustomUserManager(UserManager):
         user = self.model(
             email=self.normalize_email(email)
         )
+        password = make_password(password)
         user.set_password(password)
         user.username = username
         user.role = role

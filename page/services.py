@@ -18,6 +18,10 @@ class PageService:
         msg = 'You are no longer follow this page'
         return msg
 
+    @staticmethod
+    def block_pages(request):
+        for page in request.user.owner_page
+
 
 class PostService:
     @staticmethod
@@ -29,3 +33,9 @@ class PostService:
             emails_list,
             fail_silently=False
         )
+
+
+class UploadService:
+    @staticmethod
+    def check_file_extension(request):
+        ...
