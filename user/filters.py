@@ -4,7 +4,7 @@ from user.models import User
 
 
 class UserFilter(filters.FilterSet):
-    username = filters.CharFilter(field_name='username')
+    username = filters.CharFilter(field_name='username', lookup_expr='icontains')
 
     class Meta:
         model = User
