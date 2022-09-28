@@ -5,7 +5,7 @@ from django.core.mail import send_mail
 
 class PageService:
     @staticmethod
-    def follow_unfollow_switch(page, request) -> dict:
+    def follow_unfollow_switch(page, request) -> str:
         if request.user not in page.followers.all():
             if page.is_private:
                 page.follow_requests.add(request.user)

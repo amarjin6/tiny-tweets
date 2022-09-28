@@ -15,6 +15,7 @@ requests = "*"
 django-rest-swagger = "*"
 psycopg2-binary = "*"
 uuid = "*"
+django-filter = "*"
 
 [dev-packages]
 

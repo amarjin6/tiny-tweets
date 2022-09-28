@@ -1,12 +1,14 @@
 from rest_framework import viewsets
 from rest_framework import mixins
 from rest_framework.permissions import IsAuthenticated
+from django_filters.rest_framework import DjangoFilterBackend
 
 from core.mixins.serializers import DynamicRoleSerializerMixin
 from core.enums import Role
 from page.models import Tag, Page, Post
 from page.permissions import PageAccessPermission
 from page.serializers import TagSerializer, PageSerializer, PostSerializer, FullPageSerializer
+from page.filters import PageFilter
 
 
 class TagViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -24,6 +26,9 @@ class PageViewSet(DynamicRoleSerializerMixin, viewsets.ModelViewSet):
         Role.ADMIN.value: FullPageSerializer,
         Role.MODERATOR.value: FullPageSerializer,
     }
+
+    filter_backends = (DjangoFilterBackend,)
+    filterset_class = PageFilter
 
 
 class PostViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):

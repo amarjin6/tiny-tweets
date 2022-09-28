@@ -37,7 +37,6 @@ services:
     container_name: rabbitmq
     restart: on-failure
     env_file:
-      - env/.env
       - env/rabbitmq.env
     ports:
       - "5672:5672"
