@@ -35,7 +35,17 @@ class PageViewSet(viewsets.ModelViewSet):
         return self.serializer_action_classes.get(self.action, self.serializer_class)
 
     def create(self, request, *args, **kwargs):
-        data = {**request.data, 'owner': User.objects.get(id=self.request.user.id)}
+        tags = request.data.pop('tags')
+        tags_id = []
+        for tag in tags:
+            try:
+                obj = Tag.objects.get(name=tag)
+            except Tag.DoesNotExist:
+                obj = Tag.objects.create(name=tag)
+                obj.save()
+            tags_id.append(obj.id)
+
+        data = {**request.data, 'tags': tags_id, 'owner': User.objects.get(id=self.request.user.id).id}
         serializer = self.get_serializer_class()
         serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)

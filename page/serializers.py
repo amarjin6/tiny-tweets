@@ -40,10 +40,6 @@ class PostSerializer(serializers.ModelSerializer):
 
 
 class CreatePageSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True)
-    owner = UserSerializer()
-    followers = UserSerializer(read_only=True, many=True)
-
     class Meta:
         model = Page
         fields = ('id', 'uuid', 'title', 'tags', 'image', 'owner', 'description', 'is_private')

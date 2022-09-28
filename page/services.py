@@ -20,7 +20,7 @@ class PageService:
 
     @staticmethod
     def block_pages(request):
-        for page in request.user.owner_page
+        ...
 
 
 class PostService:
