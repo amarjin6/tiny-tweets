@@ -1,21 +1,22 @@
 import os
-
 from django.core.mail import send_mail
 
 
 class PageService:
     @staticmethod
-    def follow_unfollow_switch(page, request) -> str:
+    def follow_unfollow_switch(page, request) -> dict:
         if request.user not in page.followers.all():
             if page.is_private:
                 page.follow_requests.add(request.user)
-                msg = 'Waiting for reply'
+                msg = {'status': 'Follow request created'}
                 return msg
+
             page.followers.add(request.user)
-            msg = 'You successfully followed'
+            msg = {'status': 'Now you follow this page'}
             return msg
+
         page.followers.remove(request.user)
-        msg = 'You are no longer follow this page'
+        msg = {'status': 'You are no longer follow this page'}
         return msg
 
     @staticmethod
