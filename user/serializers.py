@@ -1,4 +1,5 @@
 from rest_framework import serializers
+from django.contrib.auth.password_validation import validate_password
 
 from user.models import User
 
@@ -14,8 +15,11 @@ class CreateUserSerializer(serializers.ModelSerializer):
         model = User
         fields = ('id', 'username', 'email', 'password', 'role')
         extra_kwargs = {
-            'password': {'write_only': True}
+            'password': {'write_only': True,
+                         'required': True,
+                         'validators': [validate_password]
+                         }
         }
 
-    def create(self, validated_data):
-        return User.objects.create_user(**validated_data)
+        def create(self, validated_data):
+            return User.objects.create_user(**validated_data)

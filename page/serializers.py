@@ -37,3 +37,12 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('id', 'page', 'created_at', 'updated_at')
+
+
+class CreatePageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Page
+        fields = ('id', 'uuid', 'title', 'tags', 'image', 'owner', 'description', 'is_private')
+
+        def create(self, validated_data):
+            return Page.objects.create(**validated_data)
