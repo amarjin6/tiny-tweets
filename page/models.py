@@ -25,7 +25,7 @@ class Page(models.Model):
     unblock_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.uuid} {self.title}'
+        return f'{self.id} {self.title}'
 
 
 class Post(models.Model):

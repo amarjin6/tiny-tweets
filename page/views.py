@@ -10,7 +10,7 @@ from user.models import User
 from page.models import Tag, Page, Post
 from page.permissions import PageAccessPermission, IsPageOwner
 from page.serializers import TagSerializer, PageSerializer, PostSerializer, FullPageSerializer, CreatePageSerializer, \
-    UpdatePageSerializer, PageOwnerSerializer, ApproveRequestsSerializer
+    UpdatePageSerializer, PageOwnerSerializer, ApproveRequestsSerializer, DeclineRequestsSerializer
 from page.filters import PageFilter
 from page.services import PageService
 
@@ -74,7 +74,7 @@ class PageViewSet(viewsets.ModelViewSet):
 
         data = {**request.data, 'tags': tags_id, 'owner': User.objects.get(id=self.request.user.id).id}
         serializer = self.get_serializer_class()
-        serializer = serializer(data=data)
+        serializer = serializer(instance=self.get_object(), data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         headers = self.get_success_headers(serializer.data)
@@ -89,6 +89,14 @@ class PageViewSet(viewsets.ModelViewSet):
             detail=True)
     def approve_requests(self, request, *args, **kwargs):
         serializer = ApproveRequestsSerializer(self.get_object(), request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    @action(methods=['PATCH'], url_path='decline-requests', permission_classes=[IsPageOwner],
+            detail=True)
+    def decline_requests(self, request, *args, **kwargs):
+        serializer = DeclineRequestsSerializer(self.get_object(), request.data, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)

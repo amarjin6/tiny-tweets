@@ -29,7 +29,9 @@ class PageSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Page
-        fields = ('id', 'uuid', 'title', 'tags', 'owner', 'followers', 'is_private', 'is_blocked', 'unblock_date')
+        fields = (
+            'id', 'uuid', 'title', 'tags', 'image', 'description', 'owner', 'followers', 'is_private', 'is_blocked',
+            'unblock_date')
         read_only_fields = ('followers', 'is_blocked', 'unblock_date')
 
 
@@ -57,15 +59,10 @@ class UpdatePageSerializer(serializers.ModelSerializer):
 
 
 class PageOwnerSerializer(serializers.ModelSerializer):
-    tags = TagSerializer(many=True)
-    owner = UserSerializer(read_only=True)
-    followers = UserSerializer(many=True, read_only=True)
-    follow_requests = UserSerializer(many=True, read_only=True)
-
     class Meta:
         model = Page
-        fields = ('id', 'uuid', 'title', 'tags', 'owner', 'followers', 'follow_requests', 'is_private', 'is_blocked',
-                  'unblock_date')
+        fields = ('id', 'uuid', 'title', 'tags', 'owner', 'description', 'followers', 'follow_requests', 'is_private',
+                  'is_blocked', 'unblock_date')
         read_only_fields = ('is_blocked', 'unblock_date')
 
 
@@ -79,6 +76,20 @@ class ApproveRequestsSerializer(serializers.ModelSerializer):
         for user in users:
             page.follow_requests.remove(user)
             page.followers.add(user)
+
+        page.save()
+        return page
+
+
+class DeclineRequestsSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Page
+        fields = ('follow_requests',)
+
+    def update(self, page, validated_data):
+        users = validated_data.pop('follow_requests')
+        for user in users:
+            page.follow_requests.remove(user)
 
         page.save()
         return page
