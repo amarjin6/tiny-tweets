@@ -9,14 +9,15 @@ class PageService:
             if page.is_private:
                 page.follow_requests.add(request.user)
                 msg = {'status': 'Follow request created'}
-                return msg
 
-            page.followers.add(request.user)
-            msg = {'status': 'Now you follow this page'}
-            return msg
+            else:
+                page.followers.add(request.user)
+                msg = {'status': 'Now you follow this page'}
 
-        page.followers.remove(request.user)
-        msg = {'status': 'You are no longer follow this page'}
+        else:
+            page.followers.remove(request.user)
+            msg = {'status': 'You are no longer follow this page'}
+
         return msg
 
     @staticmethod
@@ -26,6 +27,24 @@ class PageService:
 
 class PostService:
     @staticmethod
+    def like_unlike_switch(post, request):
+        if request.user not in post.liked_by.all():
+            post.liked_by.add(request.user)
+            msg = {'status': 'You like this post'}
+
+        else:
+            post.liked_by.remove(request.user)
+            msg = {'status': 'You don\'t like this post anymore'}
+
+        return msg
+
+
+class UploadService:
+    @staticmethod
+    def check_file_extension(request):
+        ...
+
+    @staticmethod
     def send_email(emails_list: list, msg: str):
         send_mail(
             os.getenv('SUBJECT', 'Innotter notification'),
@@ -34,9 +53,3 @@ class PostService:
             emails_list,
             fail_silently=False
         )
-
-
-class UploadService:
-    @staticmethod
-    def check_file_extension(request):
-        ...

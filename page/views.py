@@ -6,13 +6,15 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
 
+from core.mixins.serializers import DynamicActionSerializerMixin
 from user.models import User
 from page.models import Tag, Page, Post
 from page.permissions import PageAccessPermission, IsPageOwner
 from page.serializers import TagSerializer, PageSerializer, PostSerializer, FullPageSerializer, CreatePageSerializer, \
-    UpdatePageSerializer, PageOwnerSerializer, ApproveRequestsSerializer, DeclineRequestsSerializer
+    UpdatePageSerializer, PageOwnerSerializer, ApproveRequestsSerializer, DeclineRequestsSerializer, \
+    CreatePostSerializer, UpdatePostSerializer, LikedPostsSerializer
 from page.filters import PageFilter
-from page.services import PageService
+from page.services import PageService, PostService
 
 
 class TagViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -43,15 +45,17 @@ class PageViewSet(viewsets.ModelViewSet):
             return self.serializer_action_classes.get(self.action, self.serializer_class)
 
     def create(self, request, *args, **kwargs):
-        tags = request.data.pop('tags')
         tags_id = []
-        for tag in tags:
-            try:
-                obj = Tag.objects.get(name=tag)
-            except Tag.DoesNotExist:
-                obj = Tag.objects.create(name=tag)
-                obj.save()
-            tags_id.append(obj.id)
+        if 'tags' in request.data:
+            tags = request.data.pop('tags')
+
+            for tag in tags:
+                try:
+                    obj = Tag.objects.get(name=tag)
+                except Tag.DoesNotExist:
+                    obj = Tag.objects.create(name=tag)
+                    obj.save()
+                tags_id.append(obj.id)
 
         data = {**request.data, 'tags': tags_id, 'owner': User.objects.get(id=self.request.user.id).id}
         serializer = self.get_serializer_class()
@@ -62,15 +66,16 @@ class PageViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
     def update(self, request, *args, **kwargs):
-        tags = request.data.pop('tags')
         tags_id = []
-        for tag in tags:
-            try:
-                obj = Tag.objects.get(name=tag)
-            except Tag.DoesNotExist:
-                obj = Tag.objects.create(name=tag)
-                obj.save()
-            tags_id.append(obj.id)
+        if 'tags' in request.data:
+            tags = request.data.pop('tags')
+            for tag in tags:
+                try:
+                    obj = Tag.objects.get(name=tag)
+                except Tag.DoesNotExist:
+                    obj = Tag.objects.create(name=tag)
+                    obj.save()
+                tags_id.append(obj.id)
 
         data = {**request.data, 'tags': tags_id, 'owner': User.objects.get(id=self.request.user.id).id}
         serializer = self.get_serializer_class()
@@ -102,7 +107,41 @@ class PageViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class PostViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
+class PostViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
     queryset = Post.objects.all()
     serializer_class = PostSerializer
+    permission_classes = (IsAuthenticated,)
+
+    serializer_action_classes = {
+        'create': CreatePostSerializer,
+        'update': UpdatePostSerializer,
+    }
+
+    def create(self, request, *args, **kwargs):
+        data = {**request.data, 'owner': User.objects.get(id=self.request.user.id).id}
+        serializer = self.get_serializer_class()
+        serializer = serializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        data = {**request.data, 'owner': User.objects.get(id=self.request.user.id).id}
+        serializer = self.get_serializer_class()
+        serializer = serializer(instance=self.get_object(), data=data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
+
+    @action(methods=['GET'], url_path=r'\w*like', permission_classes=[IsAuthenticated], detail=True)
+    def like(self, request, *args, **kwargs):
+        msg = PostService.like_unlike_switch(self.get_object(), request)
+        return Response(data=msg, status=status.HTTP_201_CREATED)
+
+
+class LikedPostsViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
+    queryset = Post.objects.all()
+    serializer_class = LikedPostsSerializer
     permission_classes = (IsAuthenticated,)
