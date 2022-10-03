@@ -15,6 +15,7 @@ from page.serializers import TagSerializer, PageSerializer, PostSerializer, Full
     CreatePostSerializer, UpdatePostSerializer, LikedPostsSerializer
 from page.filters import PageFilter
 from page.services import PageService, PostService
+from core.serializers import ImageSerializer
 
 
 class TagViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -46,6 +47,7 @@ class PageViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         tags_id = []
+        image = None
         if 'tags' in request.data:
             tags = request.data.pop('tags')
 
@@ -56,6 +58,8 @@ class PageViewSet(viewsets.ModelViewSet):
                     obj = Tag.objects.create(name=tag)
                     obj.save()
                 tags_id.append(obj.id)
+        if 'image' in request.data:
+            ImageSerializer.validate_extension(request.data['image'])
 
         data = {**request.data, 'tags': tags_id, 'owner': User.objects.get(id=self.request.user.id).id}
         serializer = self.get_serializer_class()

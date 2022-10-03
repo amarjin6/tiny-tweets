@@ -11,7 +11,7 @@ from core.mixins.serializers import DynamicActionSerializerMixin
 from core.permissions import IsAdminOrModerator
 from user.filters import UserFilter
 from page.services import PageService
-
+from core.serializers import ImageSerializer
 
 class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
@@ -32,6 +32,9 @@ class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
     filterset_class = UserFilter
 
     def perform_create(self, serializer):
+        if 'image' in self.request.data:
+            ImageSerializer.validate_extension(self.request.data['image'])
+
         if 'password' in self.request.data:
             password = make_password(self.request.data['password'])
             serializer.save(password=password)
