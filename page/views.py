@@ -106,6 +106,14 @@ class PageViewSet(viewsets.ModelViewSet):
         serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+    @action(methods=['GET'], url_path='liked-posts', permission_classes=[PageAccessPermission],
+            detail=True)
+    def show_liked_posts(self, request, *args, **kwargs):
+        serializer = LikedPostsSerializer(self.get_object(), request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 class PostViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
     queryset = Post.objects.all()
@@ -139,9 +147,3 @@ class PostViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
     def like(self, request, *args, **kwargs):
         msg = PostService.like_unlike_switch(self.get_object(), request)
         return Response(data=msg, status=status.HTTP_201_CREATED)
-
-
-class LikedPostsViewSet(mixins.ListModelMixin, viewsets.GenericViewSet):
-    queryset = Post.objects.all()
-    serializer_class = LikedPostsSerializer
-    permission_classes = (IsAuthenticated,)

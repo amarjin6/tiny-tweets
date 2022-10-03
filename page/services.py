@@ -1,6 +1,8 @@
 import os
 from django.core.mail import send_mail
 
+from page.models import Page
+
 
 class PageService:
     @staticmethod
@@ -21,13 +23,17 @@ class PageService:
         return msg
 
     @staticmethod
-    def block_pages(request):
-        ...
+    def block_pages(user_id):
+        pages = Page.objects.all()
+        for page in pages:
+            if page.owner.id == int(user_id):
+                page.is_blocked = True
+                page.save()
 
 
 class PostService:
     @staticmethod
-    def like_unlike_switch(post, request):
+    def like_unlike_switch(post, request) -> dict:
         if request.user not in post.liked_by.all():
             post.liked_by.add(request.user)
             msg = {'status': 'You like this post'}

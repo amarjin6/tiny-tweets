@@ -10,6 +10,13 @@ class TagSerializer(serializers.ModelSerializer):
         fields = ('id', 'name')
 
 
+class BlockPageSerializer(serializers.ModelSerializer):
+    def to_representation(self, instance):
+        ret = super().to_representation(instance)
+        if not ret['is_blocked']:
+            return ret
+
+
 class FullPageSerializer(serializers.ModelSerializer):
     tags = TagSerializer(many=True)
     owner = UserSerializer(read_only=True)
@@ -22,7 +29,7 @@ class FullPageSerializer(serializers.ModelSerializer):
                   'unblock_date')
 
 
-class PageSerializer(serializers.ModelSerializer):
+class PageSerializer(BlockPageSerializer, serializers.ModelSerializer):
     tags = TagSerializer(many=True, read_only=True)
     owner = UserSerializer(read_only=True)
     followers = UserSerializer(read_only=True, many=True)
@@ -50,7 +57,7 @@ class UpdatePageSerializer(serializers.ModelSerializer):
         fields = ('id', 'uuid', 'title', 'tags', 'image', 'owner', 'description', 'is_private')
 
 
-class PageOwnerSerializer(serializers.ModelSerializer):
+class PageOwnerSerializer(BlockPageSerializer, serializers.ModelSerializer):
     class Meta:
         model = Page
         fields = ('id', 'uuid', 'title', 'tags', 'owner', 'description', 'followers', 'follow_requests', 'is_private',
@@ -107,7 +114,7 @@ class CreatePostSerializer(serializers.ModelSerializer):
 
 
 class UpdatePostSerializer(serializers.ModelSerializer):
-    page = PageSerializer
+    page = PageSerializer()
 
     class Meta:
         model = Post
@@ -115,13 +122,20 @@ class UpdatePostSerializer(serializers.ModelSerializer):
 
 
 class LikedPostsSerializer(serializers.ModelSerializer):
-    liked_by = UserSerializer(many=True)
-
     class Meta:
-        model = Post
-        fields = ('id', 'page', 'content', 'owner', 'reply_to', 'liked_by')
+        model = Page
+        fields = ('id', 'page_post')
+        depth = 1
 
     def to_representation(self, instance):
         ret = super().to_representation(instance)
-        if ret['liked_by']:
-            return ret
+        posts = ret.pop('page_post')
+        i = 0
+        for post in posts:
+            if not post['liked_by']:
+                posts.pop(i)
+
+            i += 1
+
+        ret['page_post'] = posts
+        return ret
