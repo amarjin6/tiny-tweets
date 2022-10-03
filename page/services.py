@@ -23,11 +23,14 @@ class PageService:
         return msg
 
     @staticmethod
-    def block_pages(user_id):
+    def block_unblock_switch(user_id: int, is_blocked: bool):
         pages = Page.objects.all()
         for page in pages:
-            if page.owner.id == int(user_id):
-                page.is_blocked = True
+            if page.owner.id == user_id:
+                if is_blocked and not page.is_blocked:
+                    page.is_blocked = True
+                elif not is_blocked and page.is_blocked:
+                    page.is_blocked = False
                 page.save()
 
 

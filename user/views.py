@@ -49,7 +49,6 @@ class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
         serializer = serializer(instance=self.get_object(), data=request.data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-        if serializer.data['is_blocked']:
-            PageService.block_pages(user_id=kwargs['pk'])
+        PageService.block_unblock_switch(user_id=int(kwargs['pk']), is_blocked=bool(serializer.data['is_blocked']))
         headers = self.get_success_headers(serializer.data)
         return Response(data=serializer.data, status=status.HTTP_200_OK, headers=headers)

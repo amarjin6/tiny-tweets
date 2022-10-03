@@ -147,3 +147,14 @@ class PostViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
     def like(self, request, *args, **kwargs):
         msg = PostService.like_unlike_switch(self.get_object(), request)
         return Response(data=msg, status=status.HTTP_201_CREATED)
+
+
+class FeedViewSet(mixins.ListModelMixin, mixins.RetrieveModelMixin,
+                  viewsets.GenericViewSet):
+    serializer_class = PostSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Post.objects.filter(page__owner=self.request.user.id or Post(page__followers=self.request.user.id),
+                                   page__owner__is_blocked=False,
+                                   page__is_blocked=False).order_by('-created_at')
