@@ -47,17 +47,17 @@ class PageViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         tags_id = []
-        image = None
         if 'tags' in request.data:
             tags = request.data.pop('tags')
-
+            existing_tags = Tag.objects.filter(name__in=tags)
+            for tag in existing_tags:
+                tags_id.append(tag.id)
+                tags.remove(tag.name)
             for tag in tags:
-                try:
-                    obj = Tag.objects.get(name=tag)
-                except Tag.DoesNotExist:
-                    obj = Tag.objects.create(name=tag)
-                    obj.save()
-                tags_id.append(obj.id)
+                new_tag = Tag.objects.create(name=tag)
+                new_tag.save()
+                tags_id.append(new_tag.id)
+
         if 'image' in request.data:
             ImageSerializer.validate_extension(request.data['image'])
 
@@ -73,13 +73,14 @@ class PageViewSet(viewsets.ModelViewSet):
         tags_id = []
         if 'tags' in request.data:
             tags = request.data.pop('tags')
+            existing_tags = Tag.objects.filter(name__in=tags)
+            for tag in existing_tags:
+                tags_id.append(tag.id)
+                tags.remove(tag.name)
             for tag in tags:
-                try:
-                    obj = Tag.objects.get(name=tag)
-                except Tag.DoesNotExist:
-                    obj = Tag.objects.create(name=tag)
-                    obj.save()
-                tags_id.append(obj.id)
+                new_tag = Tag.objects.create(name=tag)
+                new_tag.save()
+                tags_id.append(new_tag.id)
 
         data = {**request.data, 'tags': tags_id, 'owner': User.objects.get(id=self.request.user.id).id}
         serializer = self.get_serializer_class()

@@ -13,6 +13,7 @@ from user.filters import UserFilter
 from page.services import PageService
 from core.serializers import ImageSerializer
 
+
 class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer

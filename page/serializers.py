@@ -130,12 +130,9 @@ class LikedPostsSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         ret = super().to_representation(instance)
         posts = ret.pop('page_post')
-        i = 0
-        for post in posts:
+        for i, post in enumerate(posts):
             if not post['liked_by']:
                 posts.pop(i)
-
-            i += 1
 
         ret['page_post'] = posts
         return ret

@@ -24,14 +24,13 @@ class PageService:
 
     @staticmethod
     def block_unblock_switch(user_id: int, is_blocked: bool):
-        pages = Page.objects.all()
+        pages = Page.objects.select_related('owner').filter(owner_id=user_id)
         for page in pages:
-            if page.owner.id == user_id:
-                if is_blocked and not page.is_blocked:
-                    page.is_blocked = True
-                elif not is_blocked and page.is_blocked:
-                    page.is_blocked = False
-                page.save()
+            if is_blocked and not page.is_blocked:
+                page.is_blocked = True
+            elif not is_blocked and page.is_blocked:
+                page.is_blocked = False
+            page.save()
 
 
 class PostService:
@@ -48,11 +47,7 @@ class PostService:
         return msg
 
 
-class UploadService:
-    @staticmethod
-    def check_file_extension(request):
-        ...
-
+class NotificationService:
     @staticmethod
     def send_email(emails_list: list, msg: str):
         send_mail(

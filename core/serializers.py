@@ -1,7 +1,7 @@
 from rest_framework import serializers
 import os
 
-ALLOWED_IMAGE_EXTENSIONS = ['png', 'jpg', 'jpeg', 'bmp', 'gif']
+ALLOWED_IMAGE_EXTENSIONS = ('png', 'jpg', 'jpeg', 'bmp', 'gif')
 
 
 class ImageSerializer(serializers.ModelSerializer):
