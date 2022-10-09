@@ -1,6 +1,3 @@
-import os
-from django.core.mail import send_mail
-
 from page.models import Page
 
 
@@ -45,15 +42,3 @@ class PostService:
             msg = {'status': 'You don\'t like this post anymore'}
 
         return msg
-
-
-class NotificationService:
-    @staticmethod
-    def send_email(emails_list: list, msg: str):
-        send_mail(
-            os.getenv('SUBJECT', 'Innotter notification'),
-            msg,
-            os.getenv('EMAIL_HOST_USER'),
-            emails_list,
-            fail_silently=False
-        )

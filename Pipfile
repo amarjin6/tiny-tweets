@@ -16,6 +16,8 @@ django-rest-swagger = "*"
 psycopg2-binary = "*"
 uuid = "*"
 django-filter = "*"
+awscli-local = "*"
+boto3 = "*"
 
 [dev-packages]
 

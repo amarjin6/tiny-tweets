@@ -16,6 +16,7 @@ from page.serializers import TagSerializer, PageSerializer, PostSerializer, Full
 from page.filters import PageFilter
 from page.services import PageService, PostService
 from core.serializers import ImageSerializer
+from core.services import AWSManager
 
 
 class TagViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -60,6 +61,7 @@ class PageViewSet(viewsets.ModelViewSet):
 
         if 'image' in request.data:
             ImageSerializer.validate_extension(request.data['image'])
+            AWSManager.upload_file(request.data['image'])
 
         data = {**request.data, 'tags': tags_id, 'owner': User.objects.get(id=self.request.user.id).id}
         serializer = self.get_serializer_class()
@@ -136,6 +138,7 @@ class PostViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
         serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
+        AWSManager.send_mail(serializer.data)
         headers = self.get_success_headers(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 

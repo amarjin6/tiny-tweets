@@ -22,13 +22,14 @@ services:
       - env/db.env
     depends_on:
       - pgdb
+      - localstack
   localstack:
     image: localstack/localstack
     container_name: localstack
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - "4566:4566"
+      - "4563-4599:4563-4599"
     env_file:
       - env/.env
       - env/localstack.env
@@ -43,33 +44,29 @@ services:
       - "15672:15672"
     networks:
       - rabbitmq
-#  celery:
-#    build: .
-#    container_name: celery
-#    restart: on-failure
-#    command: celery -A innotter worker -l INFO
-#    volumes:
-#      - .:/usr/src/
-#    env_file:
-#      - env/rabbitmq.env
-#      - env/db.env
-#      - env/.env
-#    depends_on:
-#      - pgdb
-#      - rabbitmq
-#      - django
-#  flower:
-#    image: mher/flower
-#    container_name: flower
-#    command: celery flower
-#    ports:
-#      - "5555:5555"
-#    volumes:
-#      - flower_data:/data
-#    env_file:
-#      - env/rabbitmq.env
-#    depends_on:
-#      - celery
+  celery:
+    build: .
+    container_name: celery
+    restart: on-failure
+    command: celery -A innotter worker -l INFO
+    volumes:
+      - .:/usr/src/
+    env_file:
+      - env/rabbitmq.env
+    depends_on:
+      - rabbitmq
+  flower:
+    image: mher/flower
+    container_name: flower
+    command: celery flower
+    ports:
+      - "5555:5555"
+    volumes:
+      - flower_data:/data
+    env_file:
+      - env/rabbitmq.env
+    depends_on:
+      - celery
 volumes:
   pgdata:
   flower_data:

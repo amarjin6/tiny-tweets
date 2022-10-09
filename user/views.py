@@ -12,6 +12,7 @@ from core.permissions import IsAdminOrModerator
 from user.filters import UserFilter
 from page.services import PageService
 from core.serializers import ImageSerializer
+from core.services import AWSManager
 
 
 class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
@@ -35,6 +36,7 @@ class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
     def perform_create(self, serializer):
         if 'image' in self.request.data:
             ImageSerializer.validate_extension(self.request.data['image'])
+            AWSManager.upload_file(self.request.data['image'])
 
         if 'password' in self.request.data:
             password = make_password(self.request.data['password'])

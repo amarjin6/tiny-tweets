@@ -12,7 +12,7 @@ class Tag(models.Model):
 
 
 class Page(models.Model):
-    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
+    uuid = models.UUIDField(unique=True, editable=True, default=uuid.uuid4)
     title = models.CharField(max_length=80)
     tags = models.ManyToManyField(Tag, related_name='tags_page')
     image = models.URLField(null=True, blank=True)
