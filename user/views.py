@@ -4,6 +4,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny, IsAdminUser
 from django.contrib.auth.hashers import make_password
 from rest_framework.response import Response
 from rest_framework import status
+from django.shortcuts import get_object_or_404
 
 from user.models import User
 from user.serializers import UserSerializer, CreateUserSerializer
@@ -36,7 +37,9 @@ class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
     def perform_create(self, serializer):
         if 'image' in self.request.data:
             ImageSerializer.validate_extension(self.request.data['image'])
-            AWSManager.upload_file(self.request.data['image'])
+            aws = AWSManager()
+            image = aws.upload_file(self.request.data['image'], 'user' + str(User.objects.latest('id').id + 1))
+            serializer.validated_data['image'] = image
 
         if 'password' in self.request.data:
             password = make_password(self.request.data['password'])
@@ -56,5 +59,22 @@ class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
         PageService.block_unblock_switch(user_id=int(kwargs['pk']), is_blocked=bool(serializer.data['is_blocked']))
-        headers = self.get_success_headers(serializer.data)
-        return Response(data=serializer.data, status=status.HTTP_200_OK, headers=headers)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
+
+    def list(self, request, *args, **kwargs):
+        queryset = User.objects.all()
+        serializer = UserSerializer(queryset, many=True)
+        aws = AWSManager()
+        for user in serializer.data:
+            user['image'] = aws.create_presigned_url(key=user['image'])
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk):
+        queryset = User.objects.all()
+        user = get_object_or_404(queryset, pk=pk)
+        serializer = UserSerializer(user)
+        aws = AWSManager()
+        data = serializer.data
+        image = aws.create_presigned_url(key=data['image'])
+        data['image'] = image
+        return Response(data)

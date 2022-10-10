@@ -23,6 +23,13 @@ services:
     depends_on:
       - pgdb
       - localstack
+#  fastapi:
+#    build: ./microservice
+#    container_name: fastapi
+#    ports:
+#      - "8080:8080"
+#    env_file:
+#      - ./.env
   localstack:
     image: localstack/localstack
     container_name: localstack
@@ -42,8 +49,6 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
-    networks:
-      - rabbitmq
   celery:
     build: .
     container_name: celery
@@ -53,6 +58,7 @@ services:
       - .:/usr/src/
     env_file:
       - env/rabbitmq.env
+      - env/.env
     depends_on:
       - rabbitmq
   flower:
@@ -70,5 +76,3 @@ services:
 volumes:
   pgdata:
   flower_data:
-networks:
-  rabbitmq:

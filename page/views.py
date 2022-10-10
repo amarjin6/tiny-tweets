@@ -5,6 +5,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.decorators import action
+from django.shortcuts import get_object_or_404
 
 from core.mixins.serializers import DynamicActionSerializerMixin
 from user.models import User
@@ -48,6 +49,7 @@ class PageViewSet(viewsets.ModelViewSet):
 
     def create(self, request, *args, **kwargs):
         tags_id = []
+        image = None
         if 'tags' in request.data:
             tags = request.data.pop('tags')
             existing_tags = Tag.objects.filter(name__in=tags)
@@ -61,15 +63,15 @@ class PageViewSet(viewsets.ModelViewSet):
 
         if 'image' in request.data:
             ImageSerializer.validate_extension(request.data['image'])
-            AWSManager.upload_file(request.data['image'])
+            aws = AWSManager()
+            image = aws.upload_file(self.request.data['image'], 'page' + str(Page.objects.latest('id').id + 1))
 
-        data = {**request.data, 'tags': tags_id, 'owner': User.objects.get(id=self.request.user.id).id}
+        data = {**request.data, 'tags': tags_id, 'image': image, 'owner': User.objects.get(id=self.request.user.id).id}
         serializer = self.get_serializer_class()
         serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         tags_id = []
@@ -89,8 +91,25 @@ class PageViewSet(viewsets.ModelViewSet):
         serializer = serializer(instance=self.get_object(), data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def list(self, request, *args, **kwargs):
+        queryset = Page.objects.all()
+        serializer = PageSerializer(queryset, many=True)
+        aws = AWSManager()
+        for page in serializer.data:
+            page['image'] = aws.create_presigned_url(key=page['image'])
+        return Response(serializer.data)
+
+    def retrieve(self, request, pk):
+        queryset = User.objects.all()
+        page = get_object_or_404(queryset, pk=pk)
+        serializer = PageSerializer(page)
+        aws = AWSManager()
+        data = serializer.data
+        image = aws.create_presigned_url(key=data['image'])
+        data['image'] = image
+        return Response(data)
 
     @action(methods=['GET'], url_path=r'\w*follow', permission_classes=[IsAuthenticated], detail=True)
     def follow(self, request, *args, **kwargs):
@@ -139,8 +158,7 @@ class PostViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         AWSManager.send_mail(serializer.data)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
         data = {**request.data, 'owner': User.objects.get(id=self.request.user.id).id}
@@ -148,8 +166,7 @@ class PostViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
         serializer = serializer(instance=self.get_object(), data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
-        headers = self.get_success_headers(serializer.data)
-        return Response(serializer.data, status=status.HTTP_200_OK, headers=headers)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     @action(methods=['GET'], url_path=r'\w*like', permission_classes=[IsAuthenticated], detail=True)
     def like(self, request, *args, **kwargs):

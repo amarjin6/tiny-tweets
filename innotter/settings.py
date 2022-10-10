@@ -228,4 +228,4 @@ DEBUG_TOOLBAR_CONFIG = {
 }
 
 CELERY_BROKER_URL = f"{os.getenv('PROTOCOL')}://{os.getenv('RABBITMQ_DEFAULT_USER')}:" \
-                    f"{os.getenv('RABBITMQ_DEFAULT_PASS')}@{os.getenv('HOST')}:{os.getenv('PORT')} "
+                    f"{os.getenv('RABBITMQ_DEFAULT_PASS')}@{os.getenv('HOST')}:{os.getenv('PORT')}/"

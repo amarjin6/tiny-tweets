@@ -15,7 +15,7 @@ class Page(models.Model):
     uuid = models.UUIDField(unique=True, editable=True, default=uuid.uuid4)
     title = models.CharField(max_length=80)
     tags = models.ManyToManyField(Tag, related_name='tags_page')
-    image = models.URLField(null=True, blank=True)
+    image = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_page')
     followers = models.ManyToManyField(User, related_name='followers_page', blank=True)
