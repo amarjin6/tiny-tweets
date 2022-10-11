@@ -15,7 +15,7 @@ from page.serializers import TagSerializer, PageSerializer, PostSerializer, Full
     UpdatePageSerializer, PageOwnerSerializer, ApproveRequestsSerializer, DeclineRequestsSerializer, \
     CreatePostSerializer, UpdatePostSerializer, LikedPostsSerializer
 from page.filters import PageFilter
-from page.services import PageService, PostService
+from page.services import PageService, PostService, TagService
 from core.serializers import ImageSerializer
 from core.services import AWSManager
 
@@ -48,19 +48,8 @@ class PageViewSet(viewsets.ModelViewSet):
             return self.serializer_action_classes.get(self.action, self.serializer_class)
 
     def create(self, request, *args, **kwargs):
-        tags_id = []
+        tags_id = TagService.process_tags(request)
         image = None
-        if 'tags' in request.data:
-            tags = request.data.pop('tags')
-            existing_tags = Tag.objects.filter(name__in=tags)
-            for tag in existing_tags:
-                tags_id.append(tag.id)
-                tags.remove(tag.name)
-            for tag in tags:
-                new_tag = Tag.objects.create(name=tag)
-                new_tag.save()
-                tags_id.append(new_tag.id)
-
         if 'image' in request.data:
             ImageSerializer.validate_extension(request.data['image'])
             aws = AWSManager()
@@ -74,18 +63,7 @@ class PageViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
-        tags_id = []
-        if 'tags' in request.data:
-            tags = request.data.pop('tags')
-            existing_tags = Tag.objects.filter(name__in=tags)
-            for tag in existing_tags:
-                tags_id.append(tag.id)
-                tags.remove(tag.name)
-            for tag in tags:
-                new_tag = Tag.objects.create(name=tag)
-                new_tag.save()
-                tags_id.append(new_tag.id)
-
+        tags_id = TagService.process_tags(request)
         data = {**request.data, 'tags': tags_id, 'owner': User.objects.get(id=self.request.user.id).id}
         serializer = self.get_serializer_class()
         serializer = serializer(instance=self.get_object(), data=data)
@@ -102,8 +80,7 @@ class PageViewSet(viewsets.ModelViewSet):
         return Response(serializer.data)
 
     def retrieve(self, request, pk):
-        queryset = User.objects.all()
-        page = get_object_or_404(queryset, pk=pk)
+        page = get_object_or_404(PageViewSet.queryset, pk=pk)
         serializer = PageSerializer(page)
         aws = AWSManager()
         data = serializer.data
@@ -157,7 +134,8 @@ class PostViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
         serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        AWSManager.send_mail(serializer.data)
+        aws = AWSManager()
+        aws.send_mail(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):

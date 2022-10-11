@@ -47,9 +47,6 @@ class CreatePageSerializer(serializers.ModelSerializer):
         model = Page
         fields = ('id', 'uuid', 'title', 'tags', 'image', 'owner', 'description', 'is_private')
 
-        def create(self, validated_data):
-            return Page.objects.create(**validated_data)
-
 
 class UpdatePageSerializer(serializers.ModelSerializer):
     class Meta:
@@ -108,9 +105,6 @@ class CreatePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ('id', 'page', 'content', 'owner', 'reply_to')
-
-        def create(self, validated_data):
-            return Post.objects.create(**validated_data)
 
 
 class UpdatePostSerializer(serializers.ModelSerializer):

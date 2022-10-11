@@ -20,6 +20,8 @@ services:
     env_file:
       - env/.env
       - env/db.env
+      - env/localstack.env
+      - env/rabbitmq.env
     depends_on:
       - pgdb
       - localstack
@@ -36,7 +38,7 @@ services:
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     ports:
-      - "4563-4599:4563-4599"
+      - "4566:4566"
     env_file:
       - env/.env
       - env/localstack.env
@@ -54,11 +56,14 @@ services:
     container_name: celery
     restart: on-failure
     command: celery -A innotter worker -l INFO
+    tty: true
+    stdin_open: true
     volumes:
       - .:/usr/src/
     env_file:
       - env/rabbitmq.env
       - env/.env
+      - env/localstack.env
     depends_on:
       - rabbitmq
   flower:
