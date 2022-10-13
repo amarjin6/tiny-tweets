@@ -18,6 +18,7 @@ uuid = "*"
 django-filter = "*"
 awscli-local = "*"
 boto3 = "*"
+botocore = "*"
 
 [dev-packages]
 

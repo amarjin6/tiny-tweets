@@ -8,7 +8,6 @@ from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
 
 from core.mixins.serializers import DynamicActionSerializerMixin
-from user.models import User
 from page.models import Tag, Page, Post
 from page.permissions import PageAccessPermission, IsPageOwner
 from page.serializers import TagSerializer, PageSerializer, PostSerializer, FullPageSerializer, CreatePageSerializer, \
@@ -55,7 +54,7 @@ class PageViewSet(viewsets.ModelViewSet):
             aws = AWSManager()
             image = aws.upload_file(self.request.data['image'], 'page' + str(Page.objects.latest('id').id + 1))
 
-        data = {**request.data, 'tags': tags_id, 'image': image, 'owner': User.objects.get(id=self.request.user.id).id}
+        data = {**request.data, 'tags': tags_id, 'image': image, 'owner': self.request.user.id}
         serializer = self.get_serializer_class()
         serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -64,7 +63,7 @@ class PageViewSet(viewsets.ModelViewSet):
 
     def update(self, request, *args, **kwargs):
         tags_id = TagService.process_tags(request)
-        data = {**request.data, 'tags': tags_id, 'owner': User.objects.get(id=self.request.user.id).id}
+        data = {**request.data, 'tags': tags_id, 'owner': self.request.user.id}
         serializer = self.get_serializer_class()
         serializer = serializer(instance=self.get_object(), data=data)
         serializer.is_valid(raise_exception=True)
@@ -72,15 +71,14 @@ class PageViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def list(self, request, *args, **kwargs):
-        queryset = Page.objects.all()
-        serializer = PageSerializer(queryset, many=True)
+        serializer = PageSerializer(self.queryset, many=True)
         aws = AWSManager()
         for page in serializer.data:
             page['image'] = aws.create_presigned_url(key=page['image'])
         return Response(serializer.data)
 
     def retrieve(self, request, pk):
-        page = get_object_or_404(PageViewSet.queryset, pk=pk)
+        page = get_object_or_404(self.queryset, pk=pk)
         serializer = PageSerializer(page)
         aws = AWSManager()
         data = serializer.data
@@ -129,7 +127,7 @@ class PostViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
     }
 
     def create(self, request, *args, **kwargs):
-        data = {**request.data, 'owner': User.objects.get(id=self.request.user.id).id}
+        data = {**request.data, 'owner': self.request.user.id}
         serializer = self.get_serializer_class()
         serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)
@@ -139,7 +137,7 @@ class PostViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
-        data = {**request.data, 'owner': User.objects.get(id=self.request.user.id).id}
+        data = {**request.data, 'owner': self.request.user.id}
         serializer = self.get_serializer_class()
         serializer = serializer(instance=self.get_object(), data=data)
         serializer.is_valid(raise_exception=True)

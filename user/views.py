@@ -62,15 +62,14 @@ class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
         return Response(data=serializer.data, status=status.HTTP_200_OK)
 
     def list(self, request, *args, **kwargs):
-        queryset = User.objects.all()
-        serializer = UserSerializer(queryset, many=True)
+        serializer = UserSerializer(self.queryset, many=True)
         aws = AWSManager()
         for user in serializer.data:
             user['image'] = aws.create_presigned_url(key=user['image'])
         return Response(serializer.data)
 
     def retrieve(self, request, pk):
-        user = get_object_or_404(UserViewSet.queryset, pk=pk)
+        user = get_object_or_404(self.queryset, pk=pk)
         serializer = UserSerializer(user)
         aws = AWSManager()
         data = serializer.data
