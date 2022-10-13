@@ -15,6 +15,7 @@ from page.serializers import TagSerializer, PageSerializer, PostSerializer, Full
     CreatePostSerializer, UpdatePostSerializer, LikedPostsSerializer
 from page.filters import PageFilter
 from page.services import PageService, PostService, TagService
+from page.tasks import send_mail
 from core.serializers import ImageSerializer
 from core.services import AWSManager
 
@@ -51,8 +52,7 @@ class PageViewSet(viewsets.ModelViewSet):
         image = None
         if 'image' in request.data:
             ImageSerializer.validate_extension(request.data['image'])
-            aws = AWSManager()
-            image = aws.upload_file(self.request.data['image'], 'page' + str(Page.objects.latest('id').id + 1))
+            image = AWSManager.upload_file(self.request.data['image'], 'page' + str(Page.objects.latest('id').id + 1))
 
         data = {**request.data, 'tags': tags_id, 'image': image, 'owner': self.request.user.id}
         serializer = self.get_serializer_class()
@@ -72,17 +72,15 @@ class PageViewSet(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         serializer = PageSerializer(self.queryset, many=True)
-        aws = AWSManager()
         for page in serializer.data:
-            page['image'] = aws.create_presigned_url(key=page['image'])
+            page['image'] = AWSManager.create_presigned_url(key=page['image'])
         return Response(serializer.data)
 
     def retrieve(self, request, pk):
         page = get_object_or_404(self.queryset, pk=pk)
         serializer = PageSerializer(page)
-        aws = AWSManager()
         data = serializer.data
-        image = aws.create_presigned_url(key=data['image'])
+        image = AWSManager.create_presigned_url(key=data['image'])
         data['image'] = image
         return Response(data)
 
@@ -132,8 +130,7 @@ class PostViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
         serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
-        aws = AWSManager()
-        aws.send_mail(serializer.data)
+        send_mail.delay(serializer.data)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):

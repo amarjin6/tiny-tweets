@@ -37,8 +37,7 @@ class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
     def perform_create(self, serializer):
         if 'image' in self.request.data:
             ImageSerializer.validate_extension(self.request.data['image'])
-            aws = AWSManager()
-            image = aws.upload_file(self.request.data['image'], 'user' + str(User.objects.latest('id').id + 1))
+            image = AWSManager.upload_file(self.request.data['image'], 'user' + str(User.objects.latest('id').id + 1))
             serializer.validated_data['image'] = image
 
         if 'password' in self.request.data:
@@ -63,16 +62,14 @@ class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         serializer = UserSerializer(self.queryset, many=True)
-        aws = AWSManager()
         for user in serializer.data:
-            user['image'] = aws.create_presigned_url(key=user['image'])
+            user['image'] = AWSManager.create_presigned_url(key=user['image'])
         return Response(serializer.data)
 
     def retrieve(self, request, pk):
         user = get_object_or_404(self.queryset, pk=pk)
         serializer = UserSerializer(user)
-        aws = AWSManager()
         data = serializer.data
-        image = aws.create_presigned_url(key=data['image'])
+        image = AWSManager.create_presigned_url(key=data['image'])
         data['image'] = image
         return Response(data)

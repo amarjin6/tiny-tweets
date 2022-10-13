@@ -4,5 +4,4 @@ from core.services import AWSManager
 
 @shared_task()
 def send_mail(data: list) -> dict:
-    aws = AWSManager()
-    return aws.send_mail(data)
+    return AWSManager.send_mail(data)
