@@ -18,6 +18,7 @@ from page.services import PageService, PostService, TagService
 from page.tasks import send_mail
 from core.serializers import ImageSerializer
 from core.services import AWSManager
+from page.producer import publish
 
 
 class TagViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -87,6 +88,7 @@ class PageViewSet(viewsets.ModelViewSet):
     @action(methods=['GET'], url_path=r'\w*follow', permission_classes=[IsAuthenticated], detail=True)
     def follow(self, request, *args, **kwargs):
         msg = PageService.follow_unfollow_switch(self.get_object(), request)
+        publish(msg)
         return Response(data=msg, status=status.HTTP_201_CREATED)
 
     @action(methods=['PATCH'], url_path='approve-requests', permission_classes=[IsPageOwner],

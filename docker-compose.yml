@@ -25,13 +25,19 @@ services:
     depends_on:
       - pgdb
       - localstack
-#  fastapi:
-#    build: ./microservice
-#    container_name: fastapi
-#    ports:
-#      - "8080:8080"
-#    env_file:
-#      - ./.env
+  fastapi:
+    build: ./microservice
+    container_name: fastapi
+    restart: always
+    ports:
+      - "8080:8080"
+    env_file:
+      - env/fastapi.env
+      - env/localstack.env
+      - env/rabbitmq.env
+    depends_on:
+      - localstack
+      - rabbitmq
   localstack:
     image: localstack/localstack
     container_name: localstack

@@ -12,12 +12,3 @@ class Role(Enum):
 
     def __str__(self):
         return self.value
-
-
-class AWSClient(Enum):
-    SES_CLIENT = 'ses_client',
-    S3_CLIENT = 's3_client'
-    S3_RESOURCE = 's3_resource'
-
-    def __str__(self):
-        return self.value

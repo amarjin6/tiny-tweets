@@ -6,13 +6,12 @@ from functools import lru_cache
 
 from page.models import Page
 from user.models import User
-from core.enums import AWSClient
 
 
 class AWSManager:
     @staticmethod
     @lru_cache
-    def get_client(client_name: str):
+    def get_credentials() -> dict:
         credentials = {
             'endpoint_url': f"http://{os.getenv('HOSTNAME_EXTERNAL')}:"
                             f"{os.getenv('PORT_EXTERNAL')}",
@@ -21,48 +20,43 @@ class AWSManager:
             'aws_secret_access_key': os.getenv('AWS_SECRET_KEY')
         }
 
-        entity = None
+        return credentials
 
-        if client_name == AWSClient.S3_CLIENT.value:
-            s3_client = boto3.client(
-                's3',
-                endpoint_url=credentials['endpoint_url'],
-                region_name=credentials['region_name'],
-                aws_access_key_id=credentials['aws_access_key_id'],
-                aws_secret_access_key=credentials['aws_secret_access_key']
-            )
+    @staticmethod
+    @lru_cache
+    def get_client(client_name: str):
+        credentials = AWSManager.get_credentials()
+        client = boto3.client(
+            client_name,
+            endpoint_url=credentials['endpoint_url'],
+            region_name=credentials['region_name'],
+            aws_access_key_id=credentials['aws_access_key_id'],
+            aws_secret_access_key=credentials['aws_secret_access_key']
+        )
 
-            entity = s3_client
+        if client_name == 'ses':
+            client.verify_email_identity(EmailAddress=os.getenv('EMAIL_HOST_USER'))
 
-        elif client_name == AWSClient.SES_CLIENT.value:
-            ses_client = boto3.client(
-                'ses',
-                endpoint_url=credentials['endpoint_url'],
-                region_name=credentials['region_name'],
-                aws_access_key_id=credentials['aws_access_key_id'],
-                aws_secret_access_key=credentials['aws_secret_access_key']
-            )
+        return client
 
-            ses_client.verify_email_identity(EmailAddress=os.getenv('EMAIL_HOST_USER'))
-            entity = ses_client
+    @staticmethod
+    @lru_cache
+    def get_resource(resource_name: str):
+        credentials = AWSManager.get_credentials()
+        resource = boto3.resource(
+            resource_name,
+            endpoint_url=credentials['endpoint_url'],
+            region_name=credentials['region_name'],
+            aws_access_key_id=credentials['aws_access_key_id'],
+            aws_secret_access_key=credentials['aws_secret_access_key']
+        )
 
-        elif client_name == AWSClient.S3_RESOURCE.value:
-            s3_resource = boto3.resource(
-                's3',
-                endpoint_url=credentials['endpoint_url'],
-                region_name=credentials['region_name'],
-                aws_access_key_id=credentials['aws_access_key_id'],
-                aws_secret_access_key=credentials['aws_secret_access_key']
-            )
-
-            entity = s3_resource
-
-        return entity
+        return resource
 
     @staticmethod
     @lru_cache
     def get_bucket(bucket_name: str):
-        s3_client = AWSManager.get_client(AWSClient.S3_CLIENT.value)
+        s3_client = AWSManager.get_client('s3')
 
         try:
             bucket = s3_client.create_bucket(
@@ -71,8 +65,9 @@ class AWSManager:
                     'LocationConstraint': os.getenv('AWS_DEFAULT_REGION')
                 }
             )
+
         except s3_client.exceptions.BucketAlreadyOwnedByYou:
-            s3_resource = AWSManager.get_client(AWSClient.S3_RESOURCE.value)
+            s3_resource = AWSManager.get_resource('s3')
             bucket = s3_resource.Bucket(name=os.getenv('BUCKET_NAME'))
 
         return bucket
@@ -80,7 +75,7 @@ class AWSManager:
     @staticmethod
     def create_presigned_url(key: str, expiration: int = int(os.getenv('EXPIRATION_TIME')),
                              bucket: str = os.getenv('BUCKET_NAME')) -> str | None:
-        s3_client = AWSManager.get_client(AWSClient.S3_CLIENT.value)
+        s3_client = AWSManager.get_client('s3')
 
         try:
             response = s3_client.generate_presigned_url(
@@ -110,7 +105,7 @@ class AWSManager:
         emails_list = list(Page.objects.values_list('followers__email', flat=True).distinct().filter(id=data['page']))
         owner = User.objects.get(id=data['owner'])
         msg = f"User {owner.username} created a new post: {data['content']}"
-        ses_client = AWSManager.get_client(AWSClient.SES_CLIENT.value)
+        ses_client = AWSManager.get_client('ses')
 
         response = ses_client.send_email(
             Source=os.getenv('EMAIL_HOST_USER'),
