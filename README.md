@@ -1,4 +1,4 @@
-# 🌐 Innotter - Django & FastAPI based Twitter analogue 🌐
+# Innotter - Django & FastAPI based Twitter analogue 🌐
 
 ## 🎈 **Main Purpose** 🎈
 
