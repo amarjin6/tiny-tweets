@@ -19,6 +19,7 @@ from page.tasks import send_mail
 from core.serializers import ImageSerializer
 from core.services import AWSManager
 from page.producer import publish
+from microservice.enums import MessageType
 
 
 class TagViewSet(mixins.RetrieveModelMixin, mixins.ListModelMixin, viewsets.GenericViewSet):
@@ -60,6 +61,7 @@ class PageViewSet(viewsets.ModelViewSet):
         serializer = serializer(data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
+        publish({**serializer.data, 'type': MessageType.CREATE.value})
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
@@ -69,6 +71,7 @@ class PageViewSet(viewsets.ModelViewSet):
         serializer = serializer(instance=self.get_object(), data=data)
         serializer.is_valid(raise_exception=True)
         self.perform_update(serializer)
+        publish({**serializer.data, 'type': MessageType.UPDATE.value})
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def list(self, request, *args, **kwargs):
@@ -85,10 +88,14 @@ class PageViewSet(viewsets.ModelViewSet):
         data['image'] = image
         return Response(data)
 
+    def perform_destroy(self, instance):
+        publish({'id': instance.id, 'type': MessageType.DELETE.value})
+        instance.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
     @action(methods=['GET'], url_path=r'\w*follow', permission_classes=[IsAuthenticated], detail=True)
     def follow(self, request, *args, **kwargs):
         msg = PageService.follow_unfollow_switch(self.get_object(), request)
-        publish(msg)
         return Response(data=msg, status=status.HTTP_201_CREATED)
 
     @action(methods=['PATCH'], url_path='approve-requests', permission_classes=[IsPageOwner],

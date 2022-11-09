@@ -25,6 +25,7 @@ services:
     depends_on:
       - pgdb
       - localstack
+      - rabbitmq
   fastapi:
     build: ./microservice
     container_name: fastapi

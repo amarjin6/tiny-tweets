@@ -4,6 +4,9 @@ import json
 from aio_pika import connect_robust, abc
 import asyncio
 
+from microservice.enums import MessageType
+from microservice.services import AWSManager
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
@@ -25,6 +28,16 @@ async def callback(message: abc.AbstractIncomingMessage):
         try:
             message = json.loads(message.body.decode())
             logger.info(f"Message received: {message}")
+            message_type = message['type']
+
+            if message_type == MessageType.CREATE.value:
+                AWSManager.put_item(message)
+
+            elif message_type == MessageType.UPDATE.value:
+                AWSManager.update_item(message)
+
+            elif message_type == MessageType.DELETE.value:
+                AWSManager.delete_item(message)
 
         except Exception as e:
             logger.error(e)

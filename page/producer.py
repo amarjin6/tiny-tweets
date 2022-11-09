@@ -2,7 +2,13 @@ import json
 import os
 from pika import BlockingConnection, ConnectionParameters
 
-connection = BlockingConnection(ConnectionParameters(host=os.getenv('RABBITMQ_HOST')))
+connection = BlockingConnection(
+    ConnectionParameters(
+        host=os.getenv('RABBITMQ_HOST'),
+        heartbeat=600,
+        blocked_connection_timeout=300
+    )
+)
 channel = connection.channel()
 channel.queue_declare(queue=os.getenv('PUBLISH_QUEUE'))
 
