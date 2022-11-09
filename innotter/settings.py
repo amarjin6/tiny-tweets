@@ -227,12 +227,10 @@ DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': show_toolbar,
 }
 
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', 'innotter@gmail.com')
-EMAIL_HOST = os.getenv('EMAIL_HOST', 'smtp.gmail.com')
-EMAIL_PORT = os.getenv('EMAIL_PORT', 587)
-EMAIL_USE_TLS = True if os.getenv('EMAIL_USE_TLS') == '1' else False
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
-
-CELERY_BROKER_URL = f"{os.getenv('PROTOCOL')}://{os.getenv('RABBITMQ_DEFAULT_USER')}:" \
-                    f"{os.getenv('RABBITMQ_DEFAULT_PASS')}@{os.getenv('HOST')}:{os.getenv('PORT')} "
+CELERY_BROKER_URL = os.getenv('CELERY_BROKER_URL')
+CELERY_BROKER_TRANSPORT_OPTIONS = {"visibility_timeout": 3600}
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = "Europe/Minsk"
+CELERY_TASK_TRACK_STARTED = True

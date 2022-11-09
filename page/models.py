@@ -12,10 +12,10 @@ class Tag(models.Model):
 
 
 class Page(models.Model):
-    uuid = models.UUIDField(unique=True, editable=False, default=uuid.uuid4)
+    uuid = models.UUIDField(unique=True, editable=True, default=uuid.uuid4)
     title = models.CharField(max_length=80)
     tags = models.ManyToManyField(Tag, related_name='tags_page')
-    image = models.URLField(null=True, blank=True)
+    image = models.CharField(max_length=200, null=True, blank=True)
     description = models.TextField()
     owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='owner_page')
     followers = models.ManyToManyField(User, related_name='followers_page', blank=True)
@@ -25,7 +25,7 @@ class Page(models.Model):
     unblock_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
-        return f'{self.uuid} {self.title}'
+        return f'{self.id} {self.title}'
 
 
 class Post(models.Model):
@@ -38,4 +38,4 @@ class Post(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.page.title
+        return f'{self.id} {self.content}'

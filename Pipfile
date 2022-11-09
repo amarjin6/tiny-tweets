@@ -16,6 +16,15 @@ django-rest-swagger = "*"
 psycopg2-binary = "*"
 uuid = "*"
 django-filter = "*"
+awscli-local = "*"
+boto3 = "*"
+botocore = "*"
+fastapi = "*"
+uvicorn = "*"
+pika = "*"
+aio-pika = "*"
+logger = "*"
+aiormq = "*"
 
 [dev-packages]
 
