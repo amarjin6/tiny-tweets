@@ -1,0 +1,45 @@
+.navbar-logo {
+    margin-left: 30px;
+}
+
+.sr-only {
+    font-size: 25px;
+    margin-right: 3px;
+}
+
+.navbar-form {
+    display:flex;
+    margin-right: 15px;
+}
+
+.navbar-form-button {
+    margin-left: 10px;
+}
+
+.navbar-label {
+    color: #6c757d;
+    margin-right: 30px;
+}
+
+.navbar-label-link {
+    color: aliceblue;
+}
+
+.footer-credentials {
+    text-decoration: none;
+    color: inherit;
+}
+
+.bd-placeholder-img {
+    font-size: 1.125rem;
+    text-anchor: middle;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none;
+}
+
+@media (min-width: 768px) {
+    .bd-placeholder-img-lg {
+      font-size: 3.5rem;
+    }
+}
