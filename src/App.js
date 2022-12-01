@@ -4,6 +4,7 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import ControlledCarousel from './components/Carousel';
 import Cards from './components/Cards'
+import Featurette from './components/Featurette'
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Navbar />
       <ControlledCarousel />
       <Cards />
+      <Featurette />
       <Footer />
     </>
   );

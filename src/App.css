@@ -40,6 +40,78 @@
 
 @media (min-width: 768px) {
     .bd-placeholder-img-lg {
-      font-size: 3.5rem;
+        font-size: 3.5rem;
     }
+}
+
+.card-credentials {
+    color: #5a5a5a;
+    text-align: center;
+    width: 25rem;
+    margin-right: 0.75rem;
+    margin-left: 0.75rem;
+}
+
+.card-img-top {
+    width: 100%;
+    height: 17vw;
+    object-fit:scale-down;
+}
+
+.featurette-divider {
+    margin: 5rem 15rem;
+    color: #5a5a5a;
+    opacity: .25;
+}
+
+.featurette-text-left {
+    margin-left: 15rem;
+}
+
+.featurette-text-right {
+    margin-right: 15rem;
+}
+
+@media (min-width: 62em) {
+.featurette-heading {
+        margin-top: 7rem;
+    }
+}
+
+@media (min-width: 40em){
+.featurette-heading {
+        font-size: 50px;
+    }
+}
+
+.featurette-heading {
+    letter-spacing: -.05rem;
+    color: #5a5a5a;
+    width: 60rem;
+}
+
+.lh-1 {
+    line-height: 1!important;
+}
+
+.fw-normal {
+    font-weight: 400!important;
+}
+
+.lead {
+    font-size: 1.25rem;
+    font-weight: 300;
+    color: #5a5a5a;
+}
+
+.featurette-image-right {
+    width: 500px;
+    height: 500px;
+    margin-right: 15rem;
+}
+
+.featurette-image-left {
+    width: 500px;
+    height: 500px;
+    margin-left: 15rem;
 }

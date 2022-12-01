@@ -2,16 +2,16 @@ import React from "react";
 import logo from '.././images/logo.png';
 import * as Icon from 'react-bootstrap-icons';
 
-const Navbar = () => {
+export default function Navbar() {
     return (
         <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
             <a className="navbar-brand" href="#home">
             <img
-              alt="Innotter logo"
-              src={logo}
-              width="30"
-              height="30"
-              className="d-inline-block align-top navbar-logo"
+                alt="Innotter logo"
+                src={logo}
+                width="30"
+                height="30"
+                className="d-inline-block align-top navbar-logo"
             />
             Innotter
             </a>
@@ -47,5 +47,3 @@ const Navbar = () => {
         </nav>
     )
 }
-
-export default Navbar

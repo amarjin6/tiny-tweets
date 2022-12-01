@@ -4,12 +4,11 @@ import * as Icon from 'react-bootstrap-icons';
 
 export default function Footer() {
   return (
-    <MDBFooter bgColor='grey' className='text-center text-lg-start text-muted' style={{ backgroundColor: 'rgba(0, 0, 0, 0.07)' }}>
+    <MDBFooter bgColor='grey' className='text-center text-lg-start text-muted' style={{ backgroundColor: 'rgba(0, 0, 0, 0.09)' }}>
       <section className='d-flex justify-content-center justify-content-lg-between p-4 border-bottom'>
         <div className='me-5 d-none d-lg-block'>
           <span>Get connected with us on social networks:</span>
         </div>
-
         <div className='d-flex justify-content-center'>
           <a href='https://github.com/amarjin6/' className='me-4 text-reset'>
             <Icon.Facebook/>
