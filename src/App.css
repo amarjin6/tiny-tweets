@@ -66,12 +66,12 @@
 
 .featurette-text-left {
     margin-left: 15rem;
-    margin-right: 10rem;
+    font-size: 50px;
 }
 
 .featurette-text-right {
     margin-right: 15rem;
-    margin-left: 10rem;
+    font-size: 50px;
 }
 
 @media (min-width: 62em) {
