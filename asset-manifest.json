@@ -1,17 +1,23 @@
 {
   "files": {
-    "main.css": "/innotter/static/css/main.b409207a.css",
-    "main.js": "/innotter/static/js/main.8b26c704.js",
+    "main.css": "/innotter/static/css/main.6f30a5c5.css",
+    "main.js": "/innotter/static/js/main.9b2f65f6.js",
     "static/media/carousel1.jpg": "/innotter/static/media/carousel1.778c2f565949c32993a0.jpg",
     "static/media/carousel2.jpg": "/innotter/static/media/carousel2.92e3e87223c3b1739b5c.jpg",
     "static/media/carousel3.jpg": "/innotter/static/media/carousel3.ca9e75d4113f86e1dc36.jpg",
+    "static/media/featurette1.jpg": "/innotter/static/media/featurette1.806911da33460c1e3561.jpg",
+    "static/media/card2.jpg": "/innotter/static/media/card2.0b33bd1405c2ba32ddb4.jpg",
+    "static/media/card1.jpg": "/innotter/static/media/card1.9030faeb61b2005c52a2.jpg",
+    "static/media/card3.jpg": "/innotter/static/media/card3.2e276c84d35ec56f1229.jpg",
+    "static/media/featurette2.jpg": "/innotter/static/media/featurette2.5131b2fdb501829435d5.jpg",
+    "static/media/featurette3.jpg": "/innotter/static/media/featurette3.445cc7c934c0ab18d48f.jpg",
     "static/media/logo.png": "/innotter/static/media/logo.6840d095df87273fcb6b.png",
     "index.html": "/innotter/index.html",
-    "main.b409207a.css.map": "/innotter/static/css/main.b409207a.css.map",
-    "main.8b26c704.js.map": "/innotter/static/js/main.8b26c704.js.map"
+    "main.6f30a5c5.css.map": "/innotter/static/css/main.6f30a5c5.css.map",
+    "main.9b2f65f6.js.map": "/innotter/static/js/main.9b2f65f6.js.map"
   },
   "entrypoints": [
-    "static/css/main.b409207a.css",
-    "static/js/main.8b26c704.js"
+    "static/css/main.6f30a5c5.css",
+    "static/js/main.9b2f65f6.js"
   ]
 }
