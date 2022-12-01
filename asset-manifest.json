@@ -1,6 +1,6 @@
 {
   "files": {
-    "main.css": "/innotter/static/css/main.3657f519.css",
+    "main.css": "/innotter/static/css/main.e8333239.css",
     "main.js": "/innotter/static/js/main.9b2f65f6.js",
     "static/media/carousel1.jpg": "/innotter/static/media/carousel1.778c2f565949c32993a0.jpg",
     "static/media/carousel2.jpg": "/innotter/static/media/carousel2.92e3e87223c3b1739b5c.jpg",
@@ -13,11 +13,11 @@
     "static/media/featurette3.jpg": "/innotter/static/media/featurette3.445cc7c934c0ab18d48f.jpg",
     "static/media/logo.png": "/innotter/static/media/logo.6840d095df87273fcb6b.png",
     "index.html": "/innotter/index.html",
-    "main.3657f519.css.map": "/innotter/static/css/main.3657f519.css.map",
+    "main.e8333239.css.map": "/innotter/static/css/main.e8333239.css.map",
     "main.9b2f65f6.js.map": "/innotter/static/js/main.9b2f65f6.js.map"
   },
   "entrypoints": [
-    "static/css/main.3657f519.css",
+    "static/css/main.e8333239.css",
     "static/js/main.9b2f65f6.js"
   ]
 }
