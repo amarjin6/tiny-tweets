@@ -9,6 +9,15 @@ services:
       - pgdata:/var/lib/postgresql/data
     env_file:
       - env/db.env
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: rabbitmq
+    restart: on-failure
+    env_file:
+      - env/rabbitmq.env
+    ports:
+      - "5672:5672"
+      - "15672:15672"
   django:
     build: .
     container_name: django
@@ -30,6 +39,8 @@ services:
     build: ./microservice
     container_name: fastapi
     restart: always
+    volumes:
+      - ./microservice:/usr/src/
     ports:
       - "8080:8080"
     env_file:
@@ -49,15 +60,6 @@ services:
     env_file:
       - env/.env
       - env/localstack.env
-  rabbitmq:
-    image: rabbitmq:3-management-alpine
-    container_name: rabbitmq
-    restart: on-failure
-    env_file:
-      - env/rabbitmq.env
-    ports:
-      - "5672:5672"
-      - "15672:15672"
   celery:
     build: .
     container_name: celery

@@ -79,29 +79,32 @@ class AWSManager:
     @staticmethod
     def get_item():
         table = AWSManager.get_table()
-        response = table.get_item(
-            Key={'AttributeName': {'S': 'Page'}}
-        )
+        response = table.scan()
 
-        return response
+        items = response['Items']
+        while 'LastEvaluatedKey' in response:
+            response = table.scan(ExclusiveStartKey=response['LastEvaluatedKey'])
+            items.extend(response['Items'])
+
+        return items
 
     @staticmethod
-    def put_item(page: str):
+    def put_item(page: dict):
         table = AWSManager.get_table()
         response = table.put_item(
             Item={
-                'Page': page
+                'Page': str(page),
             }
         )
 
         return response
 
     @staticmethod
-    def delete_item(page: str):
+    def delete_item(page: dict):
         table = AWSManager.get_table()
         response = table.delete_item(
             Item={
-                'Page': page
+                'Page': str(page),
             }
         )
 
@@ -112,7 +115,7 @@ class AWSManager:
         table = AWSManager.get_table()
         response = table.update_item(
             Item={
-                'Page': page
+                'Page': str(page),
             }
         )
 

@@ -4,8 +4,8 @@ import json
 from aio_pika import connect_robust, abc
 import asyncio
 
-from microservice.enums import MessageType
-from microservice.services import AWSManager
+from enums import MessageType
+from services import AWSManager
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

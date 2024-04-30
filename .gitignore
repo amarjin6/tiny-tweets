@@ -102,9 +102,8 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+*.env
 .venv
-env/
 venv/
 ENV/
 env.bak/
@@ -130,6 +129,3 @@ dmypy.json
 
 # JetBrains IDE
 .idea
-
-# Images folder
-/images

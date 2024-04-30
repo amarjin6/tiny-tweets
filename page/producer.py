@@ -6,7 +6,7 @@ connection = BlockingConnection(
     ConnectionParameters(
         host=os.getenv('RABBITMQ_HOST'),
         heartbeat=600,
-        blocked_connection_timeout=300
+        blocked_connection_timeout=3000,
     )
 )
 channel = connection.channel()

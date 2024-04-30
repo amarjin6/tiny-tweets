@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'rest_framework_simplejwt',
     'django_filters',
+    'djangoviz',
 ]
 
 MIDDLEWARE = [
@@ -137,6 +138,10 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'user.User'
+
+AUTHENTICATION_BACKENDS = [
+    'django.contrib.auth.backends.ModelBackend',
+]
 
 INTERNAL_IPS = [
     '127.0.0.1',
