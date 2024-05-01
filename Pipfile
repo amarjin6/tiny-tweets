@@ -25,6 +25,10 @@ pika = "*"
 aio-pika = "*"
 logger = "*"
 aiormq = "*"
+pytest-django = "*"
+pytest-cov = "*"
+pytest-factoryboy = "*"
+django-extensions = "*"
 
 [dev-packages]
 

@@ -76,3 +76,7 @@ vine
 wcwidth
 yarl
 djangoviz
+pytest-django
+pytest-cov
+pytest-factoryboy
+django-extensions
