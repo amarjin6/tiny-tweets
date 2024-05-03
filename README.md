@@ -2,7 +2,7 @@
 
 ## 🎈 **Main Purpose** 🎈
 
-Write a backend for Twitter analogue with awesome features.
+Write a Fullstack microblog web application for Twitter analogue with awesome features.
 
 ### 🚧 **Foundation** 🚧
 
@@ -43,6 +43,7 @@ A user can have one of 3 roles:
 * Scheduler: Celery, Flower
 * Broker: RabbitMQ
 * Backend: Django, Django Rest Framework, FastAPI, boto3, Pydantic
+* Frontend: React, MUI, Webpack, Bootstrap
 * Cloud: AWS(SES, S3, EC2)
 * DevOps: Docker, Docker-compose
 
@@ -80,8 +81,8 @@ A user can have one of 3 roles:
     api/v1/login/refresh
     api/v1/login/verify
     api/v1/users
-    api/v1/customer/tags
-    api/v1/dealer/pages
+    api/v1/tags
+    api/v1/pages
     api/v1/posts
     api/v1/register
     api/v1/dealers
