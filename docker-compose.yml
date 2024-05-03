@@ -75,6 +75,20 @@ services:
       - env/localstack.env
     depends_on:
       - rabbitmq
+  react:
+    build: ./frontend
+    container_name: react
+    restart: always
+    volumes:
+      - ./frontend:/usr/src/
+      - /usr/src/node_modules
+    ports:
+      - "80:80"
+    env_file:
+      - env/react.env
+    depends_on:
+      - django
+      - fastapi
   flower:
     image: mher/flower
     container_name: flower
