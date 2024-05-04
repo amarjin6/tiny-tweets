@@ -8,7 +8,7 @@ import {login} from "../redux/reduxSlice";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 
 const Signup = () => {
-    const [name, setName] = useState(null)
+    const [first_name, setFirstname] = useState(null)
     const [email, setEmail] = useState(null)
     const [username, setUsername] = useState(null)
     const [password, setPassword] = useState(null)
@@ -18,11 +18,11 @@ const Signup = () => {
 
     const signupClick = (e) => {
         let body = {
-            name, email, username, password
+            first_name, email, username, password
         }
         let authService = new AuthService()
         authService.signup(body).then(() => {
-            authService.login({username, password}).then(res => {
+            authService.login({email, password}).then(res => {
                 dispatch(login(res.data))
                 navigate("/")
             })
@@ -49,14 +49,14 @@ const Signup = () => {
                     <form className="mt-3">
                         <div>
                             <label className="block mb-2 text-sm font-bold text-gray-700" form="fullName">
-                                Full name
+                                First name
                             </label>
                             <input
                                 className="bg-gray-200 w-full px-3 py-2 mb-1 text-sm leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline focus:bg-white"
                                 id="fullName"
                                 type="text"
                                 placeholder="First Name"
-                                onChange={e => setName(e.target.value)}
+                                onChange={e => setFirstname(e.target.value)}
                             />
                         </div>
                         <div>

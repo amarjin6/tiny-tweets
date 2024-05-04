@@ -1,4 +1,5 @@
 import {createSlice} from "@reduxjs/toolkit";
+import { jwtDecode } from 'jwt-decode';
 
 export const reduxSlice = createSlice({
     name: 'redux',
@@ -6,16 +7,17 @@ export const reduxSlice = createSlice({
         currentUser: localStorage.getItem('currentUser'),
         username: localStorage.getItem('username'),
         accessToken: localStorage.getItem('accessToken'),
-        profileImageLink: localStorage.getItem('profileImageLink')
+        profileImageLink: localStorage.getItem('image')
     },
     reducers: {
         login: (state, action) => {
-            localStorage.setItem('currentUser', action.payload.userId)
+            const user = jwtDecode(action.payload.access);
+            localStorage.setItem('currentUser', user.user_id)
             localStorage.setItem('username', action.payload.username)
-            localStorage.setItem('accessToken', action.payload.accessToken)
-            state.currentUser = action.payload.userId
+            localStorage.setItem('accessToken', action.payload.access)
+            state.currentUser = user.user_id
             state.username = action.payload.username
-            state.accessToken = action.payload.accessToken
+            state.accessToken = action.payload.access
         },
         logout: state => {
             localStorage.removeItem('currentUser')
@@ -28,8 +30,8 @@ export const reduxSlice = createSlice({
             state.profileImageLink = undefined
         },
         setUserDetails: (state, action) => {
-            localStorage.setItem('profileImageLink', action.payload.profileImageLink)
-            state.profileImageLink = action.payload.profileImageLink
+            localStorage.setItem('profileImageLink', action.payload.image)
+            state.profileImageLink = action.payload.image
         },
     }
 })

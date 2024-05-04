@@ -53,7 +53,7 @@ const sideLinks = [
 const Sidebar = () => {
     const [active, setActive] = useState("Home");
 
-    const username = useSelector(state => state.reduxSlice.username)
+    const currentUser = useSelector(state => state.reduxSlice.currentUser)
 
     const navigate = useNavigate()
 
@@ -79,7 +79,7 @@ const Sidebar = () => {
                 navigate("/");
                 break;
             case "Profile":
-                navigate("/" + username);
+                navigate("/" + currentUser);
                 break;
             case "More":
                 navigate("/");

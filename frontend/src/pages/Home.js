@@ -17,7 +17,7 @@ const Home = () => {
     const navigate = useNavigate()
     const loginClick = (e) => {
         let body = {
-            username: username,
+            email: username,
             password: password
         }
         let authService = new AuthService()
@@ -57,7 +57,7 @@ const Home = () => {
                     <form className="flex justify-center w-full mt-5">
                         <div className="mr-2.5">
                             <input type="text"
-                                   placeholder="Username"
+                                   placeholder="Email"
                                    className="border-b p-3 block placeholder-gray-dark bg-transparent focus:outline-none w-full text-sm focus-within:ring-1 focus-within:ring-primary-base"
                                    onChange={e => setUsername(e.target.value)}/>
                         </div>

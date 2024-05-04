@@ -13,6 +13,7 @@
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^12.8.3",
     "axios": "^1.2.4",
+    "jwt-decode": "^4.0.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-dropzone": "^14.2.3",
@@ -51,5 +52,5 @@
     "postcss": "^7.0.35",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.1.2"
   },
-  "proxy": "http://0.0.0.0:8000/v1"
+  "proxy": "http://0.0.0.0:8000"
 }

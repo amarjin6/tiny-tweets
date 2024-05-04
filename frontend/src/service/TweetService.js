@@ -2,16 +2,16 @@ import axios from 'axios'
 
 export default class TweetService {
 
-    getTweets() {
-        return axios.get('/tweets')
+    getTweets(config) {
+        return axios.get('/api/v1/pages', config)
     }
 
     getTweetById(id) {
-        return axios.get("/tweets/" + id);
+        return axios.get("/api/v1/pages/" + id);
     }
 
     sendTweet(body) {
-        return axios.post("/tweets", body)
+        return axios.post("/api/v1/pages/", body)
     }
 
     getTweetsCommentByTweetId(id) {

@@ -15,7 +15,7 @@ const Login = () => {
     const navigate = useNavigate()
     const loginClick = (e) => {
         let body = {
-            username: username,
+            email: username,
             password: password
         }
         let authService = new AuthService()
@@ -45,8 +45,8 @@ const Login = () => {
                     </div>
                     <form className="mt-6">
                         <div>
-                            <label className="block text-gray-700">Username</label>
-                            <input type="text" name="" id="" placeholder="Enter Username"
+                            <label className="block text-gray-700">Email</label>
+                            <input type="text" name="" id="" placeholder="Enter Email"
                                    className="bg-gray-200 w-full px-4 py-3 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline focus:bg-white"
                                    onChange={e => setUsername(e.target.value)}/>
                         </div>

@@ -80,3 +80,4 @@ pytest-django
 pytest-cov
 pytest-factoryboy
 django-extensions
+django-cors-headers

@@ -11,10 +11,11 @@ import {Close} from "@mui/icons-material";
 import PlaceIcon from '@mui/icons-material/Place';
 import LinkIcon from '@mui/icons-material/Link';
 import MyDropzone from "../components/MyDropzone";
+import {useSelector} from "react-redux";
 
 const User = () => {
     const [user, setUser] = useState()
-    const [menu, setMenu] = useState(0) // 0 tweets 1 tweets & media 2 media 3 likes
+    const [menu, setMenu] = useState(0)
     const [edit, setEdit] = useState(false)
     const [name, setName] = useState()
     const [bio, setBio] = useState()
@@ -26,21 +27,30 @@ const User = () => {
     const navigate = useNavigate()
 
     const userService = new UserService()
+    const accessToken = useSelector(state => state.reduxSlice.accessToken)
+
+    const currentUser = useSelector(state => state.reduxSlice.currentUser)
+
+    let config = {
+        headers: {
+            'Authorization': 'Bearer ' + accessToken
+        }
+     }
 
     useEffect(() => {
-        userService.getUserByUsername(username).then(res => setUser(res.data))
-    }, [username])
+        userService.getUserByUsername(config, currentUser).then(res => setUser(res.data))
+    }, [currentUser])
 
     const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
     const saveProfile = () => {
         let body = {
-            name,
-            bio,
-            location,
-            webSite
+            first_name: name,
+            last_name: bio,
+            username: location,
+            email: webSite,
         }
-        userService.editProfile(body, user.id).then((res => {
+        userService.editProfile(body, config, user.id).then((res => {
             setUser(res.data)
             setEdit(false)
         }))
@@ -57,9 +67,9 @@ const User = () => {
                             fontSize={"small"}
                             onClick={() => navigate("/")}/>
                         <div className="flex flex-col">
-                            <span className="font-medium text-lg text-gray-900">{user.name}</span>
+                            <span className="font-medium text-lg text-gray-900">{user.first_name}</span>
                             <span className="font-light text-sm
-                    ">{user.tweets.length} tweets</span>
+                    ">{user.email}</span>
                         </div>
                     </header>
                     <div className="h-52" style={{
@@ -68,7 +78,7 @@ const User = () => {
                         backgroundSize: "cover"
                     }}>
                         <img
-                            src={user.profileImageLink ? `http://localhost:8080/v1/users/${username}/image/download` : profile}
+                            src={user.image}
                             alt="Profile"
                             className="w-28 h-28 rounded-full mt-36 ml-3 absolute"
                         />
@@ -80,27 +90,24 @@ const User = () => {
                             onClick={() => setEdit(!edit)}>Edit profile
                         </button>
                         <div className="mt-16 ml-3">
-                            <span className="font-bold block mb-0">{user.name}</span>
+                            <span className="font-bold block mb-0">{user.first_name} {user.last_name}</span>
                             <span className="font-light block text-sm">@{user.username}</span>
-                            {user.bio && <span className="block mt-2">{user.bio}</span>}
+                            <span className="block mt-2 text-m">
+                                When you’re editing your profile, be sure to stick to your brand voice.
+                            </span>
                             <div className="flex items-start mb-1">
-                                {user.location && <span className="flex items-center font-light block mt-2 mr-2"
+                                {user.email && <span className="flex items-center font-light block mt-2 mr-2"
                                                         style={{fontSize: "13px"}}>
                                 <PlaceIcon fontSize="small"
                                            style={{color: "lightslategrey", marginRight: "3px"}}/>
-                                    {user.location}
+                                    Minsk, Belarus
                                 </span>}
-                                {user.webSite && <span className="flex items-center font-light block mt-2 mr-2"
+                                {user.last_name && <span className="flex items-center font-light block mt-2 mr-2"
                                                        style={{fontSize: "13px"}}>
                                 <LinkIcon fontSize="small"
                                           style={{color: "lightslategrey", marginRight: "3px"}}/>
-                                    {user.webSite}
+                                    {user.email}
                                 </span>}
-                                <span className="flex items-center font-light block mt-2 mr-2"
-                                      style={{fontSize: "13px"}}>
-                                <CalendarMonthIcon fontSize="small"
-                                                   style={{color: "lightslategrey", marginRight: "3px"}}/>
-                                Joined {month[new Date(user.creationTimestamp).getUTCMonth()]} {new Date(user.creationTimestamp).getFullYear()}</span>
                             </div>
                             <div className="flex items-center">
                                 0 <span className="mr-2 p-1 text-sm font-light">Following</span>
@@ -131,7 +138,7 @@ const User = () => {
                         </button>
                     </div>
                     <Divider/>
-                    <FeedList tweets={user.tweets}/>
+                    {/*<FeedList tweets={user.email}/>*/}
                     {edit &&
                         <>
                             <div
@@ -160,7 +167,7 @@ const User = () => {
                                             }}>
                                                 <div className="w-16 h-16 mt-28 ml-1 relative">
                                                     <img
-                                                        src={user.profileImageLink ? `http://localhost:8080/v1/users/${username}/image/download` : profile}
+                                                        src={user.image}
                                                         alt="Profile"
                                                         className="w-16 h-16 rounded-full"
                                                     />
@@ -170,28 +177,28 @@ const User = () => {
                                             <div className="mt-10">
                                                 <>
                                                     <label htmlFor="name"
-                                                           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Name</label>
+                                                           className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
                                                     <input type="text" id="name"
                                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:shadow-outline focus:bg-white"
                                                            onChange={e => setName(e.target.value)}/>
                                                 </>
                                                 <>
                                                     <label htmlFor="bio"
-                                                           className="block mb-1 mt-1 text-sm font-medium text-gray-900 dark:text-white">Bio</label>
+                                                           className="block mb-1 mt-1 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
                                                     <input type="text" id="bio"
-                                                           className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:shadow-outline focus:bg-white"
+                                                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:shadow-outline focus:bg-white"
                                                            onChange={e => setBio(e.target.value)}/>
                                                 </>
                                                 <>
                                                     <label htmlFor="location"
-                                                           className="block mb-1 mt-1 text-sm font-medium text-gray-900 dark:text-white">Location</label>
+                                                           className="block mb-1 mt-1 text-sm font-medium text-gray-900 dark:text-white">Username</label>
                                                     <input type="text" id="location"
                                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:shadow-outline focus:bg-white"
                                                            onChange={e => setLocation(e.target.value)}/>
                                                 </>
                                                 <>
                                                     <label htmlFor="web-site"
-                                                           className="block mb-1 mt-1 text-sm font-medium text-gray-900 dark:text-white">Website</label>
+                                                           className="block mb-1 mt-1 text-sm font-medium text-gray-900 dark:text-white">Email</label>
                                                     <input type="text" id="web-site"
                                                            className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white focus:outline-none focus:shadow-outline focus:bg-white"
                                                            onChange={e => setWebSite(e.target.value)}/>

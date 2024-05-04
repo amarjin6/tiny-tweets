@@ -29,7 +29,7 @@ const Tweet = () => {
             </header>
             <div className="flex space-x-4 px-4 py-3">
                 <img
-                    src={`http://localhost:8080/v1/users/${username}/image/download`}
+                    src={`http://0.0.0.0:8000/api/v1/users/${username}/image/download`}
                     alt="Profile"
                     className="w-11 h-11 rounded-full"/>
                 <CommentBox/>

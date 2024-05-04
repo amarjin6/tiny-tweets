@@ -11,12 +11,19 @@ const Content = () => {
     const [tweets, setTweets] = useState({content: []});
     const [render, setRender] = useState(false)
 
-    const username = useSelector(state => state.reduxSlice.username)
     const profileImageLink = useSelector(state => state.reduxSlice.profileImageLink)
+
+    const accessToken = useSelector(state => state.reduxSlice.accessToken)
+
+     let config = {
+        headers: {
+            'Authorization': 'Bearer ' + accessToken
+        }
+     }
 
     useEffect(() => {
         let tweetService = new TweetService()
-        tweetService.getTweets().then(res => setTweets(res.data))
+        tweetService.getTweets(config).then(res => setTweets(res.data))
     }, [render]);
 
     const refreshTweets = () => {
@@ -32,15 +39,14 @@ const Content = () => {
             </header>
             <div className="flex space-x-4 px-4 py-3">
                 <img
-                    src={profileImageLink ? `http://localhost:8080/v1/users/${username}/image/download` : profile}
+                    src={profileImageLink}
                     alt="Profile"
                     className="w-11 h-11 rounded-full"
                 />
                 <TweetBox refresh={refreshTweets}/>
             </div>
             <Divider/>
-            {/* Feed */}
-            <FeedList tweets={tweets.content}/>
+            {/*<FeedList tweets={tweets.content}/>*/}
         </main>
     );
 };

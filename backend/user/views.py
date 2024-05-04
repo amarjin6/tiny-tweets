@@ -62,8 +62,8 @@ class UserViewSet(DynamicActionSerializerMixin, viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         serializer = UserSerializer(self.queryset, many=True)
-        for user in serializer.data:
-            user['image'] = AWSManager.create_presigned_url(key=user['image'])
+        # for user in serializer.data:
+        #     user['image'] = AWSManager.create_presigned_url(key=user['image'])
         return Response(serializer.data)
 
     def retrieve(self, request, pk):

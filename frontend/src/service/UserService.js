@@ -1,8 +1,9 @@
 import axios from "axios";
 
 export default class UserService {
-    getUserByUsername(username) {
-        return axios.get("/users/" + username)
+    getUserByUsername(config, currentUser) {
+        let res = axios.get(`api/v1/users/${currentUser}`, config)
+        return res
     }
 
     uploadUserProfileImage(file, username) {
@@ -13,7 +14,7 @@ export default class UserService {
         })
     }
 
-    editProfile(body, id) {
-        return axios.put(`/users/${id}`, body)
+    editProfile(body, config, id) {
+        return axios.patch(`api/v1/users/${id}/`, body, config)
     }
 }
