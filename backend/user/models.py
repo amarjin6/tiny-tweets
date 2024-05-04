@@ -13,6 +13,7 @@ class User(AbstractUser):
     image = models.CharField(max_length=200, null=True, blank=True)
     role = models.CharField(max_length=9, choices=Role.choices(), default=Role.USER.value, blank=False)
     is_blocked = models.BooleanField(default=False)
+    last_update = models.DateTimeField(blank=True, auto_now_add=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ['username', 'password']

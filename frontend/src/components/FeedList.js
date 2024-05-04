@@ -1,13 +1,26 @@
-import React from "react";
+import React, {useEffect, useState} from "react";
 import FeedItem from "./FeedItem";
+import {useSelector} from "react-redux";
 
 const FeedList = ({tweets}) => {
     return (
-        <div>
-            {tweets.map((tweet, index) => (
-                <FeedItem {...tweet} key={index}/>
-            ))}
-        </div>
+       <div>
+        {tweets.slice().reverse().map((tweet, index) => (
+            <FeedItem
+                uuid={tweet.uuid}
+                title={tweet.title}
+                tags={tweet.tags}
+                image={tweet.image}
+                description={tweet.description}
+                owner={tweet.owner}
+                followers={tweet.followers}
+                is_private={tweet.is_private}
+                is_blocked={tweet.is_blocked}
+                created_at={tweet.created_at}
+                key={index}
+            />
+        ))}
+    </div>
     );
 };
 

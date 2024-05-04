@@ -8,7 +8,7 @@ import profile from "../images/default-profile.png";
 import {useSelector} from "react-redux";
 
 const Content = () => {
-    const [tweets, setTweets] = useState({content: []});
+    const [tweets, setTweets] = useState([]);
     const [render, setRender] = useState(false)
 
     const profileImageLink = useSelector(state => state.reduxSlice.profileImageLink)
@@ -46,7 +46,7 @@ const Content = () => {
                 <TweetBox refresh={refreshTweets}/>
             </div>
             <Divider/>
-            {/*<FeedList tweets={tweets.content}/>*/}
+            <FeedList tweets={tweets}/>
         </main>
     );
 };

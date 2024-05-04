@@ -101,6 +101,19 @@ services:
       - env/rabbitmq.env
     depends_on:
       - celery
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    restart: on-failure
+    depends_on:
+      - pgdb
+    env_file:
+      - env/db.env
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - '8008:80'
 volumes:
   pgdata:
   flower_data:
+  pgadmin-data:

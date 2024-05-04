@@ -12,6 +12,8 @@ import PlaceIcon from '@mui/icons-material/Place';
 import LinkIcon from '@mui/icons-material/Link';
 import MyDropzone from "../components/MyDropzone";
 import {useSelector} from "react-redux";
+import TweetService from "../service/TweetService";
+import {render} from "react-dom";
 
 const User = () => {
     const [user, setUser] = useState()
@@ -21,6 +23,7 @@ const User = () => {
     const [bio, setBio] = useState()
     const [location, setLocation] = useState()
     const [webSite, setWebSite] = useState()
+    const [tweets, setTweets] = useState([]);
 
     const {username} = useParams()
 
@@ -40,6 +43,16 @@ const User = () => {
     useEffect(() => {
         userService.getUserByUsername(config, currentUser).then(res => setUser(res.data))
     }, [currentUser])
+
+    useEffect(() => {
+    let tweetService = new TweetService();
+    tweetService.getTweets(config).then(res => {
+        const filteredTweets = res.data.filter(tweet => tweet.owner.id == currentUser);
+        setTweets(filteredTweets);
+    });
+    }, [render]);
+
+    console.log(tweets)
 
     const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
 
@@ -138,7 +151,7 @@ const User = () => {
                         </button>
                     </div>
                     <Divider/>
-                    {/*<FeedList tweets={user.email}/>*/}
+                    <FeedList tweets={tweets}/>
                     {edit &&
                         <>
                             <div
