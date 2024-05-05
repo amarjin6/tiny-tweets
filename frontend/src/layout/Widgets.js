@@ -11,7 +11,7 @@ const Widgets = () => {
                 <SearchIcon className="w-5 h-5"/>
                 <input
                     type="text"
-                    placeholder="Search Twitter"
+                    placeholder="Search Tiny Tweets"
                     className="placeholder-gray-dark bg-transparent focus:outline-none w-full text-sm"
                 />
             </form>

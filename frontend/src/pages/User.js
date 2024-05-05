@@ -5,7 +5,6 @@ import bg from "../images/defaul-bg.png"
 import profile from "../images/default-profile.png"
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import Divider from "../components/Divider";
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import FeedList from "../components/FeedList";
 import {Close} from "@mui/icons-material";
 import PlaceIcon from '@mui/icons-material/Place';
@@ -52,10 +51,6 @@ const User = () => {
     });
     }, [render]);
 
-    console.log(tweets)
-
-    const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-
     const saveProfile = () => {
         let body = {
             first_name: name,
@@ -67,6 +62,7 @@ const User = () => {
             setUser(res.data)
             setEdit(false)
         }))
+
         window.location.reload(false)
     }
     return (
@@ -91,7 +87,7 @@ const User = () => {
                         backgroundSize: "cover"
                     }}>
                         <img
-                            src={user.image}
+                            src={user.image ? user.image : profile}
                             alt="Profile"
                             className="w-28 h-28 rounded-full mt-36 ml-3 absolute"
                         />
@@ -180,7 +176,7 @@ const User = () => {
                                             }}>
                                                 <div className="w-16 h-16 mt-28 ml-1 relative">
                                                     <img
-                                                        src={user.image}
+                                                        src={user.image ? user.image : profile}
                                                         alt="Profile"
                                                         className="w-16 h-16 rounded-full"
                                                     />

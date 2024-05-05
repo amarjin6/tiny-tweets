@@ -75,7 +75,7 @@ class PageViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def list(self, request, *args, **kwargs):
-        serializer = PageSerializer(self.queryset, many=True)
+        serializer = PageSerializer(Page.objects.all(), many=True)
         for page in serializer.data:
             page['image'] = AWSManager.create_presigned_url(key=page['image'])
         return Response(serializer.data)

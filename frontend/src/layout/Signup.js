@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import bg from "../images/bird.svg";
+import bg from "../images/signup.jpg";
 import TwitterIcon from "@mui/icons-material/Twitter";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
@@ -44,7 +44,7 @@ const Signup = () => {
                 <div className="w-full h-100">
                     <div className="text-center">
                         <TwitterIcon style={{color: "#1DA1F2", marginBottom: "10px"}} fontSize="large"/>
-                        <h1 className="text-xl md:text-2xl font-bold leading-tight">Join Twitter today.</h1>
+                        <h1 className="text-xl md:text-2xl font-bold leading-tight">Join Tiny Tweets today.</h1>
                     </div>
                     <form className="mt-3">
                         <div>

@@ -39,7 +39,7 @@ const Content = () => {
             </header>
             <div className="flex space-x-4 px-4 py-3">
                 <img
-                    src={profileImageLink}
+                    src={profileImageLink ? profileImageLink : profile}
                     alt="Profile"
                     className="w-11 h-11 rounded-full"
                 />

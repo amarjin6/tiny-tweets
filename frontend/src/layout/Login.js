@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
-import bg from "../images/bird.svg";
-import TwitterIcon from "@mui/icons-material/Twitter";
+import bg from "../images/login.jpg";
+import {ReactComponent as TwitterIcon} from "../images/twitter.svg";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import AuthService from "../service/AuthService";
@@ -40,8 +40,10 @@ const Login = () => {
 
                 <div className="w-full h-100">
                     <div className="text-center">
-                        <TwitterIcon style={{color: "#1DA1F2", marginBottom: "10px"}} fontSize="large"/>
-                        <h1 className="text-xl md:text-2xl font-bold leading-tight"> Log in to Twitter </h1>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                          <TwitterIcon style={{ color: "#1DA1F2", marginBottom: "10px", marginLeft: "3px" }} fontSize="large" />
+                        </div>
+                        <h1 className="text-xl md:text-2xl font-bold leading-tight"> Log in to Tiny Tweets </h1>
                     </div>
                     <form className="mt-6">
                         <div>
@@ -65,7 +67,7 @@ const Login = () => {
                     <div className="text-center mt-5">
                         <p className="cursor-pointer text-blue-500 hover:text-blue-700 font-semibold text-center"
                            style={{color: "#00acee"}} onClick={() => navigate("/signup")}>
-                            Forgot password? Sign up for Twitter</p>
+                            Forgot password? Sign up for Tiny Tweets</p>
                     </div>
 
                 </div>

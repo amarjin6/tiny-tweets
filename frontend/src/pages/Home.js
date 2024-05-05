@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
-import TwitterIcon from '@mui/icons-material/Twitter';
 import SearchIcon from '@mui/icons-material/Search';
 import PeopleIcon from '@mui/icons-material/People';
 import ChatIcon from '@mui/icons-material/Chat';
-import bg from '../images/bird.svg'
+import bg from '../images/friends_meal.jpg'
+import {ReactComponent as Myicon} from '../images/twitter.svg'
 import AuthService from "../service/AuthService";
 import {useDispatch} from "react-redux";
 import {login} from "../redux/reduxSlice";
@@ -33,23 +33,22 @@ const Home = () => {
                 <div className="flex w-1/2"
                      style={{
                          backgroundImage: `url(${bg}`,
-                         backgroundColor: " #1da1f2",
+                         backgroundColor: "rgba(87, 89, 93, 0.8)",
                          backgroundRepeat: "no-repeat",
                          backgroundSize: "cover"
                      }}>
                     <div className="flex flex-col justify-center w-full text-white">
-                        <div className="flex flex-row items-center max-w-md w-full ml-auto mr-auto mb-12">
-                            <SearchIcon fontSize="medium" style={{marginRight: "5px"}}/>
-                            <span className="!font-bold text-lg">Follow your interests.</span>
+                        <div className="flex flex-row items-center max-w-md w-full ml-auto mr-auto mb-12 font-bold text-xl border-blue-600 border-2 p-2 rounded-lg shadow-lg" style={{ backdropFilter: "blur(3px)", boxShadow: "0 10px 20px rgba(0, 0, 0, 0.5)" }}>
+                            <SearchIcon fontSize="large" style={{ marginRight: "5px" }} className="rounded-full shadow-lg"/>
+                            <span className="font-bold text-xl">Follow your interests</span>
                         </div>
-                        <div className="flex flex-row items-center max-w-md w-full ml-auto mr-auto mb-12">
-                            <PeopleIcon fontSize="medium" style={{marginRight: "5px"}}/>
-                            <span className="!font-bold text-lg"
-                            >Hear what your people are talking about.</span>
-                        </div>
-                        <div className="flex flex-row items-center max-w-md w-full ml-auto mr-auto mb-12">
-                            <ChatIcon fontSize="medium" style={{marginRight: "5px"}}/>
-                            <span className="!font-bold text-lg">Join the conversation.</span>
+                        <div className="flex flex-row items-center max-w-md w-full ml-auto mr-auto mb-12 font-bold text-xl border-green-600 border-2 p-2 rounded-lg shadow-lg" style={{ backdropFilter: "blur(3px)", boxShadow: "0 10px 20px rgba(0, 0, 0, 0.5)" }}>
+                        <PeopleIcon fontSize="large" style={{ marginRight: "5px" }} className="rounded-full shadow-lg"/>
+                        <span className="font-bold text-xl">Hear what your people are talking about</span>
+                    </div>
+                        <div className="flex flex-row items-center max-w-md w-full ml-auto mr-auto mb-12 font-bold text-xl border-red-500 border-2 p-2 rounded-lg shadow-lg" style={{ backdropFilter: "blur(3px)", boxShadow: "0 10px 20px rgba(0, 0, 0, 0.5)" }}>
+                            <ChatIcon fontSize="large" style={{ marginRight: "5px" }} className="rounded-full shadow-lg"/>
+                            <span className="font-bold text-xl">Join the conversation</span>
                         </div>
                     </div>
                 </div>
@@ -70,23 +69,23 @@ const Home = () => {
                         </div>
                         <button
                             className="bg-transparent py-2 px-4 rounded-2xl p-3 text-blue-400 text-sm box-border w-auto h-11 font-bold"
-                            style={{color: "#1DA1F2", border: `1px solid #1DA1F2`}} type="submit"
+                            style={{color: "#1DA1F2", border: `1px solid #57595d`}} type="submit"
                             onClick={loginClick}>Log in
                         </button>
                     </form>
                     <div className="max-h-72 m-auto max-w-sm">
-                        <TwitterIcon style={{color: "#1DA1F2", marginBottom: "10px"}} fontSize="large"/>
-                        <h1 className="text-2xl mb-6 font-bold" style={{lineHeight: "32px"}}>See what's happening in
+                        <Myicon fill="blue" style={{marginLeft: "-30px" }}/>
+                        <h1 className="text-2xl mb-3 font-bold" style={{lineHeight: "32px", color: "#1DA1F2"}}>See what's happening in
                             <br/> the world right now</h1>
-                        <span>Join Twitter today.</span>
+                        <span style={{color: "#57595d"}}>Join Tiny Tweets today.</span>
                         <button
                             className="flex justify-center items-center w-full h-11 text-white font-bold py-2 px-4 rounded-2xl mt-3"
-                            style={{backgroundColor: "#1DA1F2", border: `1px solid #1DA1F2`}}
+                            style={{backgroundColor: "#1DA1F2", border: `1px solid #eeeeef`}}
                             onClick={() => navigate("/signup")}>Sign up
                         </button>
                         <button
                             className="flex justify-center items-center w-full h-11 bg-transparent py-2 px-4 rounded-2xl mt-1"
-                            style={{color: "#1DA1F2", border: `1px solid #1DA1F2`}}
+                            style={{color: "#57595d", border: `1px solid #57595d`}}
                             onClick={() => navigate("/login")}> Log in
                         </button>
                     </div>

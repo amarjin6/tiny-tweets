@@ -6,7 +6,6 @@ import {
     ExploreIcon,
     HomeIcon,
     ListsIcon,
-    MessagesIcon,
     MoreIcon,
     NotificationsIcon,
     ProfileIcon,
@@ -25,12 +24,8 @@ const sideLinks = [
         icon: ExploreIcon,
     },
     {
-        name: "Notifications",
+        name: "Statistic",
         icon: NotificationsIcon,
-    },
-    {
-        name: "Messages",
-        icon: MessagesIcon,
     },
     {
         name: "Bookmarks",
@@ -66,10 +61,7 @@ const Sidebar = () => {
             case "Explore":
                 navigate("/");
                 break;
-            case "Notifications":
-                navigate("/");
-                break;
-            case "Messages":
+            case "Statistic":
                 navigate("/");
                 break;
             case "Bookmarks":
@@ -93,8 +85,8 @@ const Sidebar = () => {
         <div className="h-screen sticky top-0 flex flex-col justify-between w-72 px-2">
             <div>
                 <div
-                    className="mt-1 mb-4 ml-1 flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-lightest transform transition-colors duration-200">
-                    <img src={twitterLogo} alt="Twitter Logo" className="w-9 h-9"/>
+                    className="mt-3 mb-2 ml-1 flex items-center justify-center w-12 h-12 rounded-full hover:bg-gray-lightest transform transition-colors duration-200">
+                    <img src={twitterLogo} alt="Twitter Logo" className="w-20 h-20"/>
                 </div>
                 <nav className="mb-4">
                     <ul>
@@ -109,10 +101,30 @@ const Sidebar = () => {
                         ))}
                     </ul>
                 </nav>
-                <button
-                    className="bg-primary-base hover:bg-primary-dark text-white shadow-lg rounded-full py-3 px-8 w-11/12 transform transition-colors duration-200">
-                    Tweet
-                </button>
+                <div className="mt-2 mb-2 text-center">
+                    <div className="bg-gray-600 hover:bg-blue-600 text-white font-bold shadow-lg rounded-full py-3 px-8 w-11/12 transform transition-colors duration-200">
+                        <a
+                            href="mailto:amarjin6@gmail.com?subject=Tiny Tweets Proposal">
+                            Share Thoughts
+                        </a>
+                    </div>
+                </div>
+
+                <div className="mt-2 mb-2">
+                    <button
+                        className="bg-gray-600 hover:bg-green-600 text-white font-bold shadow-lg rounded-full py-3 px-8 w-11/12 transform transition-colors duration-200"
+                        onClick={() => window.open("https://github.com/amarjin6/", "_blank")}>
+                        Contact Us
+                    </button>
+                </div>
+
+                <div className="mt-2 mb-2">
+                    <button
+                        className="bg-gray-600 hover:bg-red-600 text-white font-bold shadow-lg rounded-full py-3 px-8 w-11/12 transform transition-colors duration-200"
+                        onClick={() => window.open("https://github.com/amarjin6/innotter/", "_blank")}>
+                        Contribute
+                    </button>
+                </div>
             </div>
             <UserBox/>
         </div>

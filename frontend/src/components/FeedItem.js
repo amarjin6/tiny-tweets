@@ -69,7 +69,7 @@ const FeedItem = ({
                     Blocked
                 </span>
                 <p className="mt-2 text-gray-900 text-sm">{description}</p>
-                {image && <img src={image} className="my-2 rounded-xl max-h-96" alt={title} />}
+                {image && <img src={image ? image : profile} className="my-2 rounded-xl max-h-96" alt={title} />}
                 <ul className="-ml-1 mt-3 flex justify-between max-w-md">
                     {followers.map((follower) => (
                         <li key={follower.id} className="flex items-center text-gray-dark text-sm group">

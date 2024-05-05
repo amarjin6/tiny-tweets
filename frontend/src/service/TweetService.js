@@ -10,8 +10,8 @@ export default class TweetService {
         return axios.get("/api/v1/pages/" + id);
     }
 
-    sendTweet(body) {
-        return axios.post("/api/v1/pages/", body)
+    sendTweet(body, config) {
+        return axios.post("/api/v1/pages/", body, config)
     }
 
     getTweetsCommentByTweetId(id) {

@@ -40,7 +40,7 @@ const UserBox = () => {
                     className="flex items-center mb-6 hover:bg-primary-light cursor-pointer rounded-full py-2 px-4 transform transition-colors duration-200"
                     onClick={() => navigate("/")}>
                     <img
-                        src={user.image}
+                        src={user.image ? user.image : profile}
                         alt="Profile"
                         className="w-11 h-11 rounded-full"
                     />
