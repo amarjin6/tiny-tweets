@@ -8,6 +8,9 @@ import profile from "../images/default-profile.png";
 import TweetService from "../service/TweetService";
 import axios from 'axios';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import Modal from '@mui/material/Modal';
+import { Box, TextField, Button } from '@mui/material';
 
 const Tweet = () => {
     const [tweet, setTweet] = useState(null);
@@ -16,6 +19,9 @@ const Tweet = () => {
     const [replyTo, setReplyTo] = useState('');
     const [likedPosts, setLikedPosts] = useState([]);
     const [userImages, setUserImages] = useState({});
+    const [openModal, setOpenModal] = useState(false);
+    const [newTitle, setNewTitle] = useState('');
+    const [newDescription, setNewDescription] = useState('');
     const { id } = useParams();
     const navigate = useNavigate();
     const accessToken = useSelector(state => state.reduxSlice.accessToken);
@@ -111,6 +117,37 @@ const Tweet = () => {
             });
     };
 
+    const handleOpenModal = () => {
+        setNewTitle(tweet.title);
+        setNewDescription(tweet.description);
+        setOpenModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setOpenModal(false);
+    };
+
+    const handleSaveChanges = () => {
+        const updatedTweet = {
+            ...tweet,
+            title: newTitle,
+            description: newDescription,
+            uuid: tweet.uuid,
+            tags: tweet.tags,
+            owner: tweet.owner,
+            is_private: tweet.is_private
+        };
+
+        axios.patch(`/api/v1/pages/${id}/`, updatedTweet, config)
+            .then(() => {
+                setTweet(updatedTweet);
+                setOpenModal(false);
+            })
+            .catch(err => {
+                console.error(err);
+            });
+    };
+
     return (
         <>
             {tweet && (
@@ -134,8 +171,11 @@ const Tweet = () => {
                                     {tweet.created_at ? new Date(tweet.created_at).toLocaleString("tr-TR") : ""}
                                 </span>
                                 {parseInt(currentUser) === parseInt(tweet.owner.id) && (
+                                <>
+                                    <EditIcon className="w-6 h-6 text-gray-600 cursor-pointer ml-2" onClick={handleOpenModal} />
                                     <DeleteIcon className="w-6 h-6 text-red-600 cursor-pointer ml-2" onClick={handleDelete} />
-                                )}
+                                </>
+                            )}
                             </div>
                             <span className="bg-green-100 text-green-800 px-2 py-1 text-xs font-medium rounded-full mr-2 mb-2">
                                 {tweet.uuid}
@@ -254,6 +294,30 @@ const Tweet = () => {
                     ))}
                 </div>
             )}
+            <Modal open={openModal} onClose={handleCloseModal}>
+                <Box sx={{ position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400, bgcolor: 'background.paper', boxShadow: 24, p: 4 }}>
+                    <h2>Edit Page</h2>
+                    <TextField
+                        fullWidth
+                        margin="normal"
+                        label="Title"
+                        value={newTitle}
+                        onChange={(e) => setNewTitle(e.target.value)}
+                    />
+                    <TextField
+                        fullWidth
+                        margin="normal"
+                        label="Description"
+                        value={newDescription}
+                        onChange={(e) => setNewDescription(e.target.value)}
+                    />
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end', mt: 2 }}>
+                        <Button variant="contained" color="primary" onClick={handleSaveChanges}>
+                            Save
+                        </Button>
+                    </Box>
+                </Box>
+            </Modal>
         </>
     );
 };

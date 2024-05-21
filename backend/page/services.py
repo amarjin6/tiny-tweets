@@ -1,3 +1,5 @@
+import ast
+
 from page.models import Page, Tag
 
 
@@ -51,12 +53,20 @@ class TagService:
         if 'tags' in request.data:
             tags = request.data.pop('tags')
             existing_tags = Tag.objects.filter(name__in=tags)
-            for tag in existing_tags:
-                tags_id.append(tag.id)
-                tags.remove(tag.name)
-            for tag in tags:
-                new_tag = Tag.objects.create(name=tag)
-                new_tag.save()
-                tags_id.append(new_tag.id)
+            try:
+                for tag in existing_tags:
+                    tags_id.append(tag.id)
+                    tags.remove(tag.name)
+                for tag in tags:
+                    new_tag = Tag.objects.create(name=tag)
+                    new_tag.save()
+                    tags_id.append(new_tag.id)
 
-        return tags_id
+            except ValueError:
+                ...
+
+        tags_list = list(existing_tags.values_list('name', flat=True))
+        dict_list = [ast.literal_eval(item) for item in tags_list]
+        id_list = [d['id'] for d in dict_list]
+
+        return id_list
