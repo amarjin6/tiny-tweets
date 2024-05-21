@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import bg from "../images/signup.jpg";
-import TwitterIcon from "@mui/icons-material/Twitter";
+import {ReactComponent as TwitterIcon} from "../images/twitter.svg";
 import {useDispatch} from "react-redux";
 import {useNavigate} from "react-router-dom";
 import AuthService from "../service/AuthService";
@@ -43,7 +43,9 @@ const Signup = () => {
 
                 <div className="w-full h-100">
                     <div className="text-center">
-                        <TwitterIcon style={{color: "#1DA1F2", marginBottom: "10px"}} fontSize="large"/>
+                        <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
+                          <TwitterIcon style={{ color: "#1DA1F2", marginBottom: "10px", marginLeft: "3px" }} fontSize="large" />
+                        </div>
                         <h1 className="text-xl md:text-2xl font-bold leading-tight">Join Tiny Tweets today.</h1>
                     </div>
                     <form className="mt-3">

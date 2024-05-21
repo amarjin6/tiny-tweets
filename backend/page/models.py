@@ -24,7 +24,6 @@ class Page(ModelProperties):
     is_private = models.BooleanField(default=False)
     is_blocked = models.BooleanField(default=False)
     unblock_date = models.DateTimeField(null=True, blank=True)
-    unblock_date = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.id} {self.title}'

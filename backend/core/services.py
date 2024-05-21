@@ -104,6 +104,10 @@ class AWSManager:
     def send_mail(data: list) -> dict:
         emails_list = list(Page.objects.values_list('followers__email', flat=True).distinct().filter(id=data['page']))
         owner = User.objects.get(id=data['owner'])
+
+        if not emails_list:
+            emails_list = ['admin@gmail.com']
+
         msg = f"User {owner.username} created a new post: {data['content']}"
         ses_client = AWSManager.get_client('ses')
 

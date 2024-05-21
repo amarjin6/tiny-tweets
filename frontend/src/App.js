@@ -20,7 +20,7 @@ const App = () => {
                     <Sidebar/>
                     <Routes>
                         <Route path='/' element={<Content/>}/>
-                        <Route path="/tweets/:id" element={<Tweet/>}/>
+                        <Route path="/pages/:id" element={<Tweet/>}/>
                         <Route path=":username" element={<User/>}/>
                     </Routes>
                     <Widgets/>

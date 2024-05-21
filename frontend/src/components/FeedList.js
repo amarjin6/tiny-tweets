@@ -10,6 +10,7 @@ const FeedList = ({tweets}) => {
             .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
             .map((tweet, index) => (
                 <FeedItem
+                    id={tweet.id}
                     uuid={tweet.uuid}
                     title={tweet.title}
                     tags={tweet.tags}

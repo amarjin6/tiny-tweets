@@ -10,6 +10,7 @@ import {useSelector} from "react-redux";
 import UserService from "../service/UserService";
 
 const FeedItem = ({
+    id,
     uuid,
     title,
     tags,
@@ -24,6 +25,10 @@ const FeedItem = ({
     const userService = new UserService()
     const [user, setUser] = useState()
     const accessToken = useSelector(state => state.reduxSlice.accessToken)
+
+    const handleClick = () => {
+        window.location.href = `/pages/${id}`;
+    };
 
     let config = {
         headers: {
@@ -45,7 +50,7 @@ const FeedItem = ({
             <img src={user.image ? user.image : profile} alt="Profile" className="w-11 h-11 rounded-full" onClick={() => navigate("/" + owner.id)} />
             <div className="flex-1">
                 <div className="flex items-center text-sm">
-                    <h4 className="font-bold">{title}</h4>
+                    <h4 className="font-bold" onClick={handleClick}>{title}</h4>
                     <span className="ml-2 text-gray-dark">@{owner.username}</span>
                     <div className="mx-2 bg-gray-dark h-1 w-1 border rounded-full" />
                     <span className="text-gray-dark">

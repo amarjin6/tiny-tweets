@@ -93,10 +93,11 @@ class DeclineRequestsSerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     page = PageSerializer()
+    owner = UserSerializer(read_only=True)
 
     class Meta:
         model = Post
-        fields = ('id', 'page', 'created_at', 'updated_at', 'reply_to', 'liked_by')
+        fields = ('id', 'page', 'created_at', 'updated_at', 'reply_to', 'liked_by', 'owner', 'content')
 
 
 class CreatePostSerializer(serializers.ModelSerializer):
