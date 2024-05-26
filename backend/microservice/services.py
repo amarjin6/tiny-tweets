@@ -1,6 +1,8 @@
 import boto3
 import os
 from functools import lru_cache
+from fastapi import HTTPException
+from typing import Dict, Any
 
 
 class AWSManager:
@@ -125,4 +127,72 @@ class AWSManager:
 class StatisticsService:
     @staticmethod
     def get_statistics():
-        return AWSManager.get_item()
+        pages = AWSManager.get_item()
+        statistics = []
+
+        for page_item in pages:
+            page = eval(page_item['Page'])
+
+            page_id = page['id']
+            uuid = page['uuid']
+            title = page['title']
+            description = page['description']
+            tags = page['tags']
+            is_private = page['is_private']
+
+            tags_count = len(tags)
+            description_length = len(description)
+            title_length = len(title)
+            total_length = tags_count + description_length + title_length
+            privacy_status = 'Private' if is_private else 'Public'
+
+            page_statistics = {
+                'id': page_id,
+                'uuid': uuid,
+                'title': title,
+                'description': description,
+                'tags_count': tags_count,
+                'description_length': description_length,
+                'title_length': title_length,
+                'total_length': total_length,
+                'privacy_status': privacy_status,
+            }
+
+            statistics.append(page_statistics)
+
+        return statistics
+
+    @staticmethod
+    def get_statistics_by_id(page_id: int) -> Dict[str, Any]:
+        pages = AWSManager.get_item()
+        for page_item in pages:
+            page = eval(page_item['Page'])
+
+            if page['id'] == page_id:
+                uuid = page['uuid']
+                title = page['title']
+                description = page['description']
+                tags = page['tags']
+                is_private = page['is_private']
+
+                tags_count = len(tags)
+                description_length = len(description)
+                title_length = len(title)
+                total_length = tags_count + description_length + title_length
+                privacy_status = 'Private' if is_private else 'Public'
+
+                page_statistics = {
+                    'id': page_id,
+                    'uuid': uuid,
+                    'title': title,
+                    'description': description,
+                    'tags_count': tags_count,
+                    'description_length': description_length,
+                    'title_length': title_length,
+                    'total_length': total_length,
+                    'privacy_status': privacy_status,
+                }
+
+                return page_statistics
+
+        raise HTTPException(status_code=404, detail='Page not found')

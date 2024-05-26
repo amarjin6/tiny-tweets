@@ -62,7 +62,7 @@ const Sidebar = () => {
                 navigate("/");
                 break;
             case "Statistic":
-                navigate("/");
+                navigate("/statistic");
                 break;
             case "Bookmarks":
                 navigate("/");

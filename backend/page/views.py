@@ -50,7 +50,7 @@ class PageViewSet(viewsets.ModelViewSet):
             return self.serializer_action_classes.get(self.action, self.serializer_class)
 
     def create(self, request, *args, **kwargs):
-        tags_id = TagService.process_tags(request)
+        tags_id = TagService.process_create_tags(request)
         image = None
         if 'image' in request.data:
             ImageSerializer.validate_extension(request.data['image'])
@@ -65,7 +65,7 @@ class PageViewSet(viewsets.ModelViewSet):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
     def update(self, request, *args, **kwargs):
-        tags_id = TagService.process_tags(request)
+        tags_id = TagService.process_update_tags(request)
         data = {**request.data, 'tags': tags_id, 'owner': self.request.user.id}
         serializer = self.get_serializer_class()
         serializer = serializer(instance=self.get_object(), data=data)

@@ -5,6 +5,7 @@ import {Route, Routes} from "react-router-dom";
 import Login from "./layout/Login";
 import Signup from "./layout/Signup";
 import Tweet from "./pages/Tweet";
+import Statistic from "./pages/Statistic";
 import Container from "./layout/Container";
 import Sidebar from "./layout/Sidebar";
 import Content from "./layout/Content";
@@ -22,6 +23,7 @@ const App = () => {
                         <Route path='/' element={<Content/>}/>
                         <Route path="/pages/:id" element={<Tweet/>}/>
                         <Route path=":username" element={<User/>}/>
+                        <Route path="/statistic" element={<Statistic/>}/>
                     </Routes>
                     <Widgets/>
                 </Container> :
