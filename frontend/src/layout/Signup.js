@@ -18,7 +18,8 @@ const Signup = () => {
 
     const signupClick = (e) => {
         let body = {
-            first_name, email, username, password
+            first_name, email, username, password,
+            role: 'moderator'
         }
         let authService = new AuthService()
         authService.signup(body).then(() => {

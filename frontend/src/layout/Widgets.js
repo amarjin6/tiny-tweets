@@ -22,7 +22,7 @@ const Widgets = () => {
                         screenName: "elonmusk"
                     }}
                     options={{
-                        height: "1000"
+                        height: "2100"
                     }}
                 />
             </div>

@@ -65,6 +65,33 @@ const Statistic = () => {
         }],
     });
 
+    const barChartOptions = {
+        scales: {
+            x: {
+                ticks: {
+                    display: false
+                },
+                grid: {
+                    display: false
+                }
+            },
+            y: {
+                ticks: {
+                    display: false
+                },
+                grid: {
+                    display: false
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false
+            }
+        },
+        maintainAspectRatio: false
+    };
+
     if (loading) {
         return (
             <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
@@ -119,15 +146,15 @@ const Statistic = () => {
                     <Box sx={{ display: 'flex', justifyContent: 'space-around', marginTop: 4 }}>
                         <div style={{ width: '30%' }}>
                             <h3>Tags Count</h3>
-                            <Bar data={barChartData('tags_count')} />
+                            <Bar data={barChartData('tags_count')} options={barChartOptions} />
                         </div>
                         <div style={{ width: '30%' }}>
                             <h3>Title Length</h3>
-                            <Bar data={barChartData('title_length')} />
+                            <Bar data={barChartData('title_length')} options={barChartOptions} />
                         </div>
                         <div style={{ width: '30%' }}>
                             <h3>Description Length</h3>
-                            <Bar data={barChartData('description_length')} />
+                            <Bar data={barChartData('description_length')} options={barChartOptions} />
                         </div>
                     </Box>
                 </>
